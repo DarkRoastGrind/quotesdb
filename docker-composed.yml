@@ -9,4 +9,6 @@ services:
       - "80:80"
     volumes:
       - .:/var/www/html
-      
+    # Add environment variables if needed
+    # environment:
+    #   - VARIABLE_NAME=value
