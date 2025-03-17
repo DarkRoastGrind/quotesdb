@@ -1,61 +1,49 @@
 <?php
-class Database
-{
-    private $host = 'localhost';
-    private $db_name = 'quotesdb';
-    private $username = 'root';
-    private $password = '';
-    private $conn;
 
-    public function connect()
-    {
-        $this-> conn = null;
-
-        try 
-        {
-            $this->conn = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->db_name, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }
-
-        catch (PDOException $e)
-        {
-            echo 'Connection Error: ' . $e->getMessage();
-        }
-
-        return $this->conn;
-    }
-}
-
-
-/*
 class Database
 {
     // DB PARAMS
-    private $host = 'localhost';
-    private $port = '5433';
-    private $db_name = 'quotesdb';
-    private $username = 'postgres';
-    private $password = 'postgres';
     private $conn;
+    private $host;
+    private $port;
+    private $dbname;
+    private $username;
+    private $password;
 
     // DB CONNECT
+    public function __construct()
+    {
+        $this->username = getenv('USERNAME');
+        $this->password = getenv('PASSWORD');
+        $this->dbname = getenv('DBNAME');
+        $this->host = getenv('HOST');
+        $this->port = getenv('PORT');
+    }
+ 
     public function connect()
     {
-        $this-> conn = null;
-        $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->db_name}";
-
-        try 
+        if ($this->conn)
         {
-            $this->conn = new PDO($dsn, $this->username, $this->password);
-            $this->conn->setAttributes(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $this->conn;
         }
 
-        catch (PDOException $e)
+        else
         {
-            echo 'Connection Error: ' . $e->getMessage();
+            $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->dbname};";
+            try
+            {
+                $this->conn = new PDO($dsn, $this->username, $this->password);
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                return $this->conn;
+            }
+
+            catch (PDOException $e)
+            {
+                echo 'Connection error: ' . $e->getMessage();
+            }
         }
 
-        return $this->conn;
+
     }
 }
-*/
+
