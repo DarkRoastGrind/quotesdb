@@ -13,8 +13,8 @@ if ($method === 'OPTIONS') {
 }
 
 // Include necessary models and database connection
-require_once '../../models/Quote.php';
-require_once '../../config/Database.php';
+include_once '../../config/Database.php';
+include_once '../../models/Quote.php';
 
 // Instantiate DB & connect
 $database = new Database();
@@ -25,80 +25,60 @@ $quote = new Quote($db);
 
 // Handle GET requests
 if ($method === 'GET') {
-    $conditions = [];
-    
-    // Filter by ID
+    // Check if an ID is passed for single quote retrieval
     if (isset($_GET['id'])) {
+        // Fetch single quote
         $quote->id = $_GET['id'];
-        $stmt = $quote->read_single(); // Assuming this method fetches a single quote by ID
+        $quote->read_single();  // Assuming this method fetches a single quote by ID
 
-        if ($stmt) {
-            echo json_encode([
-                'id' => $quote->id,
-                'quote' => $quote->quote,
-                'author' => $quote->author_id,
-                'category' => $quote->category_id
-            ]);
-        } else {
-            echo json_encode(["message" => "No Quotes Found"]);
-        }
-        exit();
-    }
-    
-    // Filter by author ID
-    if (isset($_GET['author'])) {
-        $quote->author_id = $_GET['author'];
-        $conditions[] = "author = " . $quote->author_id;
-    }
-
-    // Filter by category ID
-    if (isset($_GET['category'])) {
-        $quote->category_id = $_GET['category'];
-        $conditions[] = "category = " . $quote->category_id;
-    }
-
-    // Build the query
-    $query = 'SELECT * FROM quotes';
-    if (count($conditions) > 0) {
-        $query .= ' WHERE ' . implode(' AND ', $conditions);
-    }
-
-    // Execute the query
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-
-    $quotes_arr = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        extract($row);
-        $quotes_arr[] = [
-            'id' => $id,
-            'quote' => $quote,
-            'author' => $author_id,
-            'category' => $category_id
-        ];
-    }
-
-    // Return results or a "No Quotes Found" message
-    if (empty($quotes_arr)) {
-        echo json_encode(["message" => "No Quotes Found"]);
+        // Return quote as JSON
+        echo json_encode([
+            'id' => $quote->id,
+            'quote' => $quote->quote,
+            'author' => $quote->author_id,
+            'category' => $quote->category_id
+        ]);
     } else {
-        echo json_encode($quotes_arr);
+        // Fetch all quotes
+        $result = $quote->read();  // Assuming this method fetches all quotes
+        $num = $result->rowCount();
+
+        // Check if any quotes exist
+        if ($num > 0) {
+            $quotes_arr = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                extract($row);
+                $quotes_arr[] = [
+                    'id' => $id,
+                    'quote' => $quote,
+                    'author' => $author_id,
+                    'category' => $category_id
+                ];
+            }
+            // Return all quotes as JSON
+            echo json_encode($quotes_arr);
+        } else {
+            echo json_encode(['message' => 'No Quotes Found']);
+        }
     }
     exit();
 }
 
 // Handle POST requests (Create a new Quote)
 if ($method === 'POST') {
+    // Get raw POST data
+    $data = json_decode(file_get_contents("php://input"));
+
     // Ensure required parameters are present
-    if (!isset($_POST['quote']) || !isset($_POST['author_id']) || !isset($_POST['category_id'])) {
+    if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
     // Set Quote data
-    $quote->quote = $_POST['quote'];
-    $quote->author_id = $_POST['author'];
-    $quote->category_id = $_POST['category'];
+    $quote->quote = $data->quote;
+    $quote->author_id = $data->author_id;
+    $quote->category_id = $data->category_id;
 
     // Attempt to create the quote
     if ($quote->create()) {
@@ -116,10 +96,11 @@ if ($method === 'POST') {
 
 // Handle PUT requests (Update an existing Quote)
 if ($method === 'PUT') {
-    // Ensure required parameters are present
-    parse_str(file_get_contents("php://input"), $_PUT); // Parse the raw PUT data
+    // Get raw PUT data
+    parse_str(file_get_contents("php://input"), $_PUT);
 
-    if (!isset($_PUT['id']) || !isset($_PUT['quote']) || !isset($_PUT['author']) || !isset($_PUT['category'])) {
+    // Ensure required parameters are present
+    if (!isset($_PUT['id']) || !isset($_PUT['quote']) || !isset($_PUT['author_id']) || !isset($_PUT['category_id'])) {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
@@ -146,9 +127,10 @@ if ($method === 'PUT') {
 
 // Handle DELETE requests (Delete a Quote)
 if ($method === 'DELETE') {
-    // Ensure required ID is present
-    parse_str(file_get_contents("php://input"), $_DELETE); // Parse the raw DELETE data
+    // Get raw DELETE data
+    parse_str(file_get_contents("php://input"), $_DELETE);
 
+    // Ensure ID is passed for deletion
     if (!isset($_DELETE['id'])) {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
