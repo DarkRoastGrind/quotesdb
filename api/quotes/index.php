@@ -32,12 +32,16 @@ if ($method === 'GET') {
         $quote->read_single();  // Assuming this method fetches a single quote by ID
 
         // Return quote as JSON
-        echo json_encode([
-            'id' => $quote->id,
-            'quote' => $quote->quote,
-            'author' => $quote->author_id,
-            'category' => $quote->category_id
-        ]);
+        if ($quote->id && $quote->quote) {
+            echo json_encode([
+                'id' => $quote->id,
+                'quote' => $quote->quote,
+                'author' => $quote->author_id,
+                'category' => $quote->category_id
+            ]);
+        } else {
+            echo json_encode(['message' => 'No Quotes Found']);
+        }
     } else {
         // Fetch all quotes
         $result = $quote->read();  // Assuming this method fetches all quotes
@@ -70,8 +74,16 @@ if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
-        echo json_encode(["message" => "Missing Required Parameters"]);
+    if (empty($data->quote)) {
+        echo json_encode(["message" => "quote Not Found"]);
+        exit();
+    }
+    if (empty($data->author_id)) {
+        echo json_encode(["message" => "author_id Not Found"]);
+        exit();
+    }
+    if (empty($data->category_id)) {
+        echo json_encode(["message" => "category_id Not Found"]);
         exit();
     }
 
@@ -85,8 +97,8 @@ if ($method === 'POST') {
         echo json_encode([
             'id' => $quote->id,
             'quote' => $quote->quote,
-            'author' => $quote->author_id,
-            'category' => $quote->category_id
+            'author_id' => $quote->author_id,
+            'category_id' => $quote->category_id
         ]);
     } else {
         echo json_encode(["message" => "Unable to create quote"]);
@@ -100,24 +112,36 @@ if ($method === 'PUT') {
     parse_str(file_get_contents("php://input"), $_PUT);
 
     // Ensure required parameters are present
-    if (!isset($_PUT['id']) || !isset($_PUT['quote']) || !isset($_PUT['author_id']) || !isset($_PUT['category_id'])) {
-        echo json_encode(["message" => "Missing Required Parameters"]);
+    if (empty($_PUT['id'])) {
+        echo json_encode(["message" => "quote ID Not Found"]);
+        exit();
+    }
+    if (empty($_PUT['quote'])) {
+        echo json_encode(["message" => "quote Not Found"]);
+        exit();
+    }
+    if (empty($_PUT['author_id'])) {
+        echo json_encode(["message" => "author_id Not Found"]);
+        exit();
+    }
+    if (empty($_PUT['category_id'])) {
+        echo json_encode(["message" => "category_id Not Found"]);
         exit();
     }
 
     // Set updated Quote data
     $quote->id = $_PUT['id'];
     $quote->quote = $_PUT['quote'];
-    $quote->author_id = $_PUT['author'];
-    $quote->category_id = $_PUT['category'];
+    $quote->author_id = $_PUT['author_id'];
+    $quote->category_id = $_PUT['category_id'];
 
     // Attempt to update the quote
     if ($quote->update()) {
         echo json_encode([
             'id' => $quote->id,
             'quote' => $quote->quote,
-            'author' => $quote->author_id,
-            'category' => $quote->category_id
+            'author_id' => $quote->author_id,
+            'category_id' => $quote->category_id
         ]);
     } else {
         echo json_encode(["message" => "No Quotes Found"]);
@@ -131,8 +155,8 @@ if ($method === 'DELETE') {
     parse_str(file_get_contents("php://input"), $_DELETE);
 
     // Ensure ID is passed for deletion
-    if (!isset($_DELETE['id'])) {
-        echo json_encode(["message" => "Missing Required Parameters"]);
+    if (empty($_DELETE['id'])) {
+        echo json_encode(["message" => "quote ID Not Found"]);
         exit();
     }
 
