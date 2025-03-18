@@ -23,14 +23,10 @@
   // Delete post
   if($author->delete()) 
   {
-    echo json_encode(
-      array('message' => 'Author deleted')
-    );
+    echo json_encode((['message' => 'Author deleted']));
   } 
 
   else 
   {
-    echo json_encode(
-      array('message' => 'Author not deleted')
-    );
+    echo json_encode((['message' => 'Author not deleted']));
   }

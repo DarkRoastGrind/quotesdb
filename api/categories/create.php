@@ -24,14 +24,10 @@
   // Create Category
   if($category->create()) 
   {
-    echo json_encode(
-      array('message' => 'category Created')
-    );
+    echo json_encode((['message' => 'category Created']));
   } 
 
   else 
   {
-    echo json_encode(
-      array('message' => 'category Not Created')
-    );
+    echo json_encode((['message' => 'category Not Created']));
   }

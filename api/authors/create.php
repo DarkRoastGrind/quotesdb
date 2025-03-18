@@ -24,14 +24,10 @@
   // Create Category
   if($author->create()) 
   {
-    echo json_encode(
-      array('message' => 'author Created')
-    );
+    echo json_encode((["message" => "author Created"]));
   } 
 
   else 
   {
-    echo json_encode(
-      array('message' => 'author Not Created')
-    );
+    echo json_encode((["message" => "author Not Created"]));
   }

@@ -46,8 +46,6 @@
 
   else 
   {
-        // No Categories
-        echo json_encode(
-          array('message' => 'No Author Found')
-        );
+    // No Categories
+    echo json_encode((['message' => 'No Author Found']));
   }
