@@ -101,20 +101,28 @@
             $stmt->bindParam(1, $this->id);
         
             // Execute query
-            if ($stmt->execute()) {
+            if ($stmt->execute()) 
+            {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
-                if ($row) {
+                if ($row) 
+                {
                     // set properties
                     $this->id = $row['id'];
                     $this->quote = $row['quote'];
                     $this->author_id = $row['author_id'];
                     $this->category_id = $row['category_id'];
-                } else {
+                } 
+
+                else 
+                {
                     echo json_encode(['message' => 'No Quotes Found']);
                     exit();
                 }
-            } else {
+            } 
+            
+            else 
+            {
                 echo json_encode(['message' => 'Error executing query']);
                 exit();
             }

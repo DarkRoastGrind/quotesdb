@@ -81,7 +81,8 @@ if ($method === 'GET') {
 }
 
 // Handle POST requests (Create a new Quote)
-if ($method === 'POST') {
+if ($method === 'POST') 
+{
     // Get raw POST data
     $data = json_decode(file_get_contents("php://input"));
 
@@ -114,6 +115,7 @@ if ($method === 'POST') {
     }
 
     // Set Quote data
+    $quote->id = $data->id;
     $quote->quote = $data->quote;
     $quote->author_id = $data->author_id;
     $quote->category_id = $data->category_id;

@@ -6,9 +6,7 @@
   header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
 
   include_once '../../config/Database.php';
-  include_once '../../models/Quote.php';
-  
-  // Instantiate DB & connect
+  include_once '../../models/Quote.php'; 
   $database = new Database();
   $db = $database->connect();
 
@@ -24,7 +22,8 @@
   $quote->category_id = $data->category_id;
 
   // Create quote
-  if ($quote->create()) {
+  if ($quote->create()) 
+  {
     echo json_encode([
         'id' => $quote->id,
         'quote' => $quote->quote,
