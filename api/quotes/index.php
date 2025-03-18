@@ -28,23 +28,31 @@ $quote = new Quote($db);
 // Handle GET requests
 if ($method === 'GET') {
     // Check if an ID is passed for single quote retrieval
-    if (isset($_GET['id'])) {
+    if (isset($_GET['id'])) 
+    {
         // Fetch single quote
         $quote->id = $_GET['id'];
         $quote->read_single();  // Assuming this method fetches a single quote by ID
 
         // Return quote as JSON
-        if ($quote->id && $quote->quote) {
+        if ($quote->id && $quote->quote) 
+        {
             echo json_encode([
                 'id' => $quote->id,
                 'quote' => $quote->quote,
                 'author' => $quote->author_id,
                 'category' => $quote->category_id
             ]);
-        } else {
+        } 
+        
+        else 
+        {
             echo json_encode(['message' => 'No Quotes Found']);
         }
-    } else {
+    } 
+
+    else 
+    {
         // Fetch all quotes
         $result = $quote->read();  // Assuming this method fetches all quotes
         $num = $result->rowCount();
@@ -52,7 +60,8 @@ if ($method === 'GET') {
         // Check if any quotes exist
         if ($num > 0) {
             $quotes_arr = [];
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
+            {
                 extract($row);
                 $quotes_arr[] = [
                     'id' => $id,
@@ -67,6 +76,7 @@ if ($method === 'GET') {
             echo json_encode(['message' => 'No Quotes Found']);
         }
     }
+
     exit();
 }
 
@@ -76,15 +86,29 @@ if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (empty($data->quote)) {
+    if (empty($data->quote) || empty($data->author_id) || empty($data->category_id)) 
+    {
+        echo json_encode([
+            "message" => "Missing Required Parameters"
+        ]);
+        exit();
+    }
+
+    // Ensure required parameters are present
+    if (empty($data->quote)) 
+    {
         echo json_encode(["message" => "quote Not Found"]);
         exit();
     }
-    if (empty($data->author_id)) {
+
+    if (!isset($data->author_id) || empty($data->author_id)) 
+    {
         echo json_encode(["message" => "author_id Not Found"]);
         exit();
     }
-    if (empty($data->category_id)) {
+
+    if (!isset($data->category_id) || empty($data->category_id)) 
+    {
         echo json_encode(["message" => "category_id Not Found"]);
         exit();
     }
@@ -95,14 +119,18 @@ if ($method === 'POST') {
     $quote->category_id = $data->category_id;
 
     // Attempt to create the quote
-    if ($quote->create()) {
+    if ($quote->create()) 
+    {
         echo json_encode([
             'id' => $quote->id,
             'quote' => $quote->quote,
             'author_id' => $quote->author_id,
             'category_id' => $quote->category_id
         ]);
-    } else {
+    } 
+
+    else 
+    {
         echo json_encode(["message" => "Unable to create quote"]);
     }
     exit();

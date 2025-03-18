@@ -26,14 +26,10 @@
   // Update post
   if($quote->update()) 
   {
-    echo json_encode(
-      array('message' => 'quote Updated')
-    );
+    echo json_encode(['message' => 'quote Updated']);
   } 
 
   else 
   {
-    echo json_encode(
-      array('message' => 'quote not updated')
-    );
+    echo json_encode(['message' => 'quote not updated']);
   }
