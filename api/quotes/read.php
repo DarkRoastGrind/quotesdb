@@ -33,8 +33,8 @@
           $auth_item = array(
             'id' => $id,
             'quote' => $quote,
-            'author_id' => $author_id,
-            'category_id' => $category_id
+            'author' => $author_id,
+            'category' => $category_id
           );
 
           // Push to "data"
