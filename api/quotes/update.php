@@ -32,19 +32,19 @@ $quote->author_id = (int) $data->author_id;
 $quote->category_id = (int) $data->category_id;
 
 // Check if quote exists before updating
-$query = "SELECT * FROM quotes WHERE id = :id";
+$query = "SELECT id FROM quotes WHERE id = :id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':id', $quote->id);
 $stmt->execute();
 
 if ($stmt->rowCount() == 0) 
 {
-    echo json_encode(["message" => "quote ID Not Found"]);
+    echo json_encode(["message" => "No Quotes Found"]);
     exit();
 }
 
 // Check if author exists
-$query = "SELECT * FROM authors WHERE id = :author_id";
+$query = "SELECT id FROM authors WHERE id = :author_id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':author_id', $quote->author_id);
 $stmt->execute();
@@ -56,7 +56,7 @@ if ($stmt->rowCount() == 0)
 }
 
 // Check if category exists
-$query = "SELECT * FROM categories WHERE id = :category_id";
+$query = "SELECT id FROM categories WHERE id = :category_id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':category_id', $quote->category_id);
 $stmt->execute();
@@ -67,7 +67,7 @@ if ($stmt->rowCount() == 0)
     exit();
 }
 
-// Update quote
+// Attempt to update the quote
 if ($quote->update()) 
 {
     echo json_encode([
@@ -77,7 +77,6 @@ if ($quote->update())
         "category_id" => $quote->category_id
     ]);
 } 
-
 else 
 {
     echo json_encode(["message" => "Quote Not Updated"]);

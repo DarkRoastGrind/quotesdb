@@ -8,7 +8,8 @@ header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Handle OPTIONS request (CORS preflight)
-if ($method === 'OPTIONS') {
+if ($method === 'OPTIONS') 
+{
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
     header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
     exit();
@@ -29,7 +30,8 @@ $db = $database->connect();
 $quote = new Quote($db);
 
 // Handle GET requests
-if ($method === 'GET') {
+if ($method === 'GET') 
+{
     // Check if an ID is passed for single quote retrieval
     if (isset($_GET['id'])) 
     {
@@ -61,7 +63,8 @@ if ($method === 'GET') {
         $num = $result->rowCount();
 
         // Check if any quotes exist
-        if ($num > 0) {
+        if ($num > 0) 
+        {
             $quotes_arr = [];
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
             {
@@ -75,7 +78,10 @@ if ($method === 'GET') {
             }
             // Return all quotes as JSON
             echo json_encode($quotes_arr);
-        } else {
+        } 
+
+        else 
+        {
             echo json_encode(['message' => 'No Quotes Found']);
         }
     }
@@ -84,7 +90,8 @@ if ($method === 'GET') {
 }
 
 // Handle POST requests (Create a new Quote)
-if ($method === 'POST') {
+if ($method === 'POST') 
+{
     // Get raw POST data
     $data = json_decode(file_get_contents("php://input"));
 
@@ -122,55 +129,71 @@ if ($method === 'POST') {
 
 
 // Handle PUT requests (Update an existing Quote)
-if ($method === 'PUT') {
+if ($method === 'PUT') 
+{
     // Get raw PUT data
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (empty($_PUT['id'])) {
+    if (empty($data->id)) 
+    {
         echo json_encode(["message" => "quote ID Not Found"]);
         exit();
     }
-    if (empty($_PUT['quote'])) {
+
+    if (empty($data->quote)) 
+    {
         echo json_encode(["message" => "quote Not Found"]);
         exit();
     }
-    if (empty($_PUT['author_id'])) {
+
+    if (empty($data->author_id)) 
+    {
         echo json_encode(["message" => "author_id Not Found"]);
         exit();
     }
-    if (empty($_PUT['category_id'])) {
+
+    if (empty($data->category_id)) 
+    {
         echo json_encode(["message" => "category_id Not Found"]);
         exit();
     }
 
     // Set updated Quote data
-    $quote->id = $_PUT['id'];
-    $quote->quote = $_PUT['quote'];
-    $quote->author_id = $_PUT['author_id'];
+    $quote->id = $data->id;
+    $quote->quote = $data->quote;
+    $quote->author_id = $data->author_id;
+    $quote->category_id = $data->category_id;
     $quote->category_id = $_PUT['category_id'];
 
     // Attempt to update the quote
-    if ($quote->update()) {
+    if ($quote->update()) 
+    {
         echo json_encode([
             'id' => $quote->id,
             'quote' => $quote->quote,
             'author_id' => $quote->author_id,
             'category_id' => $quote->category_id
         ]);
-    } else {
+    } 
+    
+    else 
+    {
         echo json_encode(["message" => "No Quotes Found"]);
     }
+
     exit();
 }
 
 // Handle DELETE requests (Delete a Quote)
-if ($method === 'DELETE') {
+if ($method === 'DELETE') 
+{
     // Get raw DELETE data
     parse_str(file_get_contents("php://input"), $_DELETE);
 
     // Ensure ID is passed for deletion
-    if (empty($_DELETE['id'])) {
+    if (empty($_DELETE['id'])) 
+    {
         echo json_encode(["message" => "quote ID Not Found"]);
         exit();
     }
@@ -179,11 +202,16 @@ if ($method === 'DELETE') {
     $quote->id = $_DELETE['id'];
 
     // Attempt to delete the quote
-    if ($quote->delete()) {
+    if ($quote->delete()) 
+    {
         echo json_encode(['id' => $quote->id]);
-    } else {
+    } 
+    
+    else 
+    {
         echo json_encode(["message" => "No Quotes Found"]);
     }
+
     exit();
 }
 
