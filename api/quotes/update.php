@@ -37,7 +37,7 @@ $stmt->bindParam(':id', $quote->id);
 $stmt->execute();
 
 if ($stmt->rowCount() == 0) {
-    echo json_encode(["message" => "No Quotes Found"]);
+    echo json_encode(["message" => "quote ID Not Found"]);
     exit();
 }
 
@@ -74,4 +74,5 @@ if ($quote->update()) {
 } else {
     echo json_encode(["message" => "Quote Not Updated"]);
 }
+
 exit();

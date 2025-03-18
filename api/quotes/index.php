@@ -124,7 +124,7 @@ if ($method === 'POST') {
 // Handle PUT requests (Update an existing Quote)
 if ($method === 'PUT') {
     // Get raw PUT data
-    parse_str(file_get_contents("php://input"), $_PUT);
+    $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
     if (empty($_PUT['id'])) {
