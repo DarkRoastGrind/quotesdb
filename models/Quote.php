@@ -24,8 +24,8 @@
             SET
                 id = :id,
                 quote = :quote,
-                author = :author_id,
-                category = :category_id';
+                author_id = :author_id,
+                category_id = :category_id';
         
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
@@ -39,8 +39,8 @@
             // Bind data
             $stmt-> bindParam(':id', $this->id);
             $stmt-> bindParam(':quote', $this->quote);
-            $stmt-> bindParam(':author', $this->author_id);
-            $stmt-> bindParam(':category', $this->category_id);
+            $stmt-> bindParam(':author_id', $this->author_id);
+            $stmt-> bindParam(':category_id', $this->category_id);
         
             // Execute query
             if($stmt->execute()) 
@@ -87,8 +87,8 @@
             $query = 'SELECT
                         id,
                         quote,
-                        author,
-                        category
+                        author_id,
+                        category_id
                     FROM
                         ' . $this->table . '
                         WHERE id = ?
@@ -108,8 +108,8 @@
             // set properties
             $this->id = $row['id'];
             $this->quote = $row['quote'];
-            $this->author_id = $row['author'];
-            $this->category_id = $row['category'];
+            $this->author_id = $row['author_id'];
+            $this->category_id = $row['category_id'];
         }
 
 
@@ -120,8 +120,8 @@
           $query = 'SELECT 
                         id,
                         quote,
-                        author,
-                        category
+                        author_id,
+                        category_id
                     FROM 
                     ' . $this->table . '
                     ORDER BY
@@ -142,9 +142,9 @@
             $query = 'UPDATE ' .
             $this->table . '
             SET
-            quote = :quote,
-            author = :author,
-            category = :category
+            quote = :quote
+            author_id = :author_id,
+            category_id = :category_id
             WHERE
             id = :id';
             
@@ -160,8 +160,8 @@
             // Bind data
             $stmt-> bindParam(':quote', $this->quote);
             $stmt-> bindParam(':id', $this->id);
-            $stmt-> bindParam(':author', $this->author_id);
-            $stmt-> bindParam(':category', $this->author_id);
+            $stmt-> bindParam(':author_id', $this->author_id);
+            $stmt-> bindParam(':category_id', $this->author_id);
             
             // Execute query
             if($stmt->execute()) 
