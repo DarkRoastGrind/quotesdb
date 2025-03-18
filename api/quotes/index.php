@@ -14,6 +14,9 @@ if ($method === 'OPTIONS') {
     exit();
 }
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Include necessary models and database connection
 include_once '../../config/Database.php';
 include_once '../../models/Quote.php';
@@ -81,8 +84,7 @@ if ($method === 'GET') {
 }
 
 // Handle POST requests (Create a new Quote)
-if ($method === 'POST') 
-{
+if ($method === 'POST') {
     // Get raw POST data
     $data = json_decode(file_get_contents("php://input"));
 
@@ -95,27 +97,7 @@ if ($method === 'POST')
         exit();
     }
 
-    // Ensure required parameters are present
-    if (empty($data->quote)) 
-    {
-        echo json_encode(["message" => "quote Not Found"]);
-        exit();
-    }
-
-    if (!isset($data->author_id) || empty($data->author_id)) 
-    {
-        echo json_encode(["message" => "author_id Not Found"]);
-        exit();
-    }
-
-    if (!isset($data->category_id) || empty($data->category_id)) 
-    {
-        echo json_encode(["message" => "category_id Not Found"]);
-        exit();
-    }
-
     // Set Quote data
-    $quote->id = $data->id;
     $quote->quote = $data->quote;
     $quote->author_id = $data->author_id;
     $quote->category_id = $data->category_id;
@@ -137,6 +119,7 @@ if ($method === 'POST')
     }
     exit();
 }
+
 
 // Handle PUT requests (Update an existing Quote)
 if ($method === 'PUT') {

@@ -19,13 +19,8 @@
         public function create() 
         {
             // Create Query
-            $query = 'INSERT INTO ' .
-              $this->table . '
-            SET
-                id = :id,
-                quote = :quote,
-                author_id = :author_id,
-                category_id = :category_id';
+            $query = 'INSERT INTO ' . $this->table . ' (id, quote, author_id, category_id) 
+            VALUES (:id, :quote, :author_id, :category_id)';
         
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
@@ -120,7 +115,7 @@
                     exit();
                 }
             } 
-            
+
             else 
             {
                 echo json_encode(['message' => 'Error executing query']);
