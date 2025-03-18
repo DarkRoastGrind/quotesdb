@@ -39,8 +39,8 @@
             }
         
             // Create Query
-            $query = 'INSERT INTO ' . $this->table . ' (id, quote, author_id, category_id) 
-                      VALUES (:id, :quote, :author_id, :category_id)';
+            $query = 'INSERT INTO ' . $this->table . ' (quote, author_id, category_id) 
+            VALUES (:quote, :author_id, :category_id)';
             
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
@@ -52,7 +52,6 @@
             $this->category_id = isset($this->category_id) ? htmlspecialchars(strip_tags($this->category_id)) : null;
             
             // Bind data
-            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
             $stmt->bindParam(':quote', $this->quote, PDO::PARAM_STR);
             $stmt->bindParam(':author_id', $this->author_id, PDO::PARAM_INT);
             $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
