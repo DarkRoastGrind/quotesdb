@@ -39,8 +39,8 @@
             }
         
             // Create Query
-            $query = 'INSERT INTO ' . $this->table . ' (quote, author_id, category_id) 
-                      VALUES (:quote, :author_id, :category_id)';
+            $query = 'INSERT INTO ' . $this->table . ' (id, quote, author_id, category_id) 
+                      VALUES (:id, :quote, :author_id, :category_id)';
             
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
