@@ -23,17 +23,21 @@
   $quote->author_id = $data->author_id;
   $quote->category_id = $data->category_id;
 
-  // Create quote
-  if($quote->create()) 
-  {
-    echo json_encode(
-      array('message' => 'quote Created')
-    );
-  } 
+// Validate data
+if(empty($data->quote) || empty($data->author_id) || empty($data->category_id)) 
+{
+  echo json_encode(['message' => 'Missing Required Data'], JSON_PRETTY_PRINT);
+  exit();
+}
 
-  else 
-  {
-    echo json_encode(
-      array('message' => 'quote Not Created')
-    );
-  }
+// Proceed with creating the quote...
+// Create Quote
+if($quote->create()) 
+{
+  echo json_encode(['message' => 'Quote Created'], JSON_PRETTY_PRINT);
+} 
+
+else 
+{
+  echo json_encode(['message' => 'Quote Not Created'], JSON_PRETTY_PRINT);
+}

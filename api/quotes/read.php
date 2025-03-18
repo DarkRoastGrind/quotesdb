@@ -19,37 +19,29 @@
   // Get row count
   $num = $result->rowCount();
 
-  // Check if any quotes
-  if($num > 0) 
+// Check if any quotes
+if($num > 0) 
+{
+  $quote_arr = ['data' => []];
+  while($row = $result->fetch(PDO::FETCH_ASSOC)) 
   {
-        // Cat array
-        $auth_arr = array();
-        $auth_arr['data'] = array();
+      extract($row);
+      $quote_item = [
+          'id' => $id,
+          'quote' => $quote,
+          'author_id' => $author_id,
+          'category_id' => $category_id
+      ];
 
-        while($row = $result->fetch(PDO::FETCH_ASSOC)) 
-        {
-          extract($row);
+      array_push($quote_arr['data'], $quote_item);
 
-          $auth_item = array(
-            'id' => $id,
-            'quote' => $quote,
-            'author_id' => $author_id,
-            'category_id' => $category_id
-          );
-
-          // Push to "data"
-          array_push($auth_arr['data'], $auth_item);
-        }
-
-        // Turn to JSON & output
-        echo json_encode($auth_arr);
-
-  } 
-
-  else 
-  {
-        // No quotes
-        echo json_encode(
-          array('message' => 'No quote Found')
-        );
   }
+
+  echo json_encode($quote_arr, JSON_PRETTY_PRINT);
+} 
+
+else 
+{
+  echo json_encode(['message' => 'No Quotes Found'], JSON_PRETTY_PRINT);
+}
+

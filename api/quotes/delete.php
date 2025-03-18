@@ -20,17 +20,12 @@
   // Set ID to UPDATE
   $quote->id = $data->id;
 
-  // Delete post
-  if($quote->delete()) 
-  {
-    echo json_encode(
-      array('message' => 'quote deleted')
-    );
-  } 
+// Delete Quote
+if($quote->delete()) 
+{
+  echo json_encode(['message' => 'Quote Deleted'], JSON_PRETTY_PRINT);
+} else 
 
-  else 
-  {
-    echo json_encode(
-      array('message' => 'quote not deleted')
-    );
-  }
+{
+  echo json_encode(['message' => 'Quote Not Deleted'], JSON_PRETTY_PRINT);
+}
