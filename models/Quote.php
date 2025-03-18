@@ -93,23 +93,31 @@
                         ' . $this->table . '
                         WHERE id = ?
                         LIMIT 1';
-
-            //Prepare statement
+        
+            // Prepare statement
             $stmt = $this->conn->prepare($query);
-
+        
             // Bind ID
             $stmt->bindParam(1, $this->id);
-
+        
             // Execute query
-            $stmt->execute();
-
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // set properties
-            $this->id = $row['id'];
-            $this->quote = $row['quote'];
-            $this->author_id = $row['author_id'];
-            $this->category_id = $row['category_id'];
+            if ($stmt->execute()) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+                if ($row) {
+                    // set properties
+                    $this->id = $row['id'];
+                    $this->quote = $row['quote'];
+                    $this->author_id = $row['author_id'];
+                    $this->category_id = $row['category_id'];
+                } else {
+                    echo json_encode(['message' => 'No Quotes Found']);
+                    exit();
+                }
+            } else {
+                echo json_encode(['message' => 'Error executing query']);
+                exit();
+            }
         }
 
 
