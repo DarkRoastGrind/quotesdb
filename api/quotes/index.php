@@ -48,13 +48,13 @@ if ($method === 'GET') {
     // Filter by author ID
     if (isset($_GET['author'])) {
         $quote->author_id = $_GET['author'];
-        $conditions[] = "author_id = " . $quote->author_id;
+        $conditions[] = "author = " . $quote->author_id;
     }
 
     // Filter by category ID
     if (isset($_GET['category'])) {
         $quote->category_id = $_GET['category'];
-        $conditions[] = "category_id = " . $quote->category_id;
+        $conditions[] = "category = " . $quote->category_id;
     }
 
     // Build the query
@@ -97,16 +97,16 @@ if ($method === 'POST') {
 
     // Set Quote data
     $quote->quote = $_POST['quote'];
-    $quote->author_id = $_POST['author_id'];
-    $quote->category_id = $_POST['category_id'];
+    $quote->author_id = $_POST['author'];
+    $quote->category_id = $_POST['category'];
 
     // Attempt to create the quote
     if ($quote->create()) {
         echo json_encode([
             'id' => $quote->id,
             'quote' => $quote->quote,
-            'author_id' => $quote->author_id,
-            'category_id' => $quote->category_id
+            'author' => $quote->author_id,
+            'category' => $quote->category_id
         ]);
     } else {
         echo json_encode(["message" => "Unable to create quote"]);
@@ -119,7 +119,7 @@ if ($method === 'PUT') {
     // Ensure required parameters are present
     parse_str(file_get_contents("php://input"), $_PUT); // Parse the raw PUT data
 
-    if (!isset($_PUT['id']) || !isset($_PUT['quote']) || !isset($_PUT['author_id']) || !isset($_PUT['category_id'])) {
+    if (!isset($_PUT['id']) || !isset($_PUT['quote']) || !isset($_PUT['author']) || !isset($_PUT['category'])) {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
@@ -127,16 +127,16 @@ if ($method === 'PUT') {
     // Set updated Quote data
     $quote->id = $_PUT['id'];
     $quote->quote = $_PUT['quote'];
-    $quote->author_id = $_PUT['author_id'];
-    $quote->category_id = $_PUT['category_id'];
+    $quote->author_id = $_PUT['author'];
+    $quote->category_id = $_PUT['category'];
 
     // Attempt to update the quote
     if ($quote->update()) {
         echo json_encode([
             'id' => $quote->id,
             'quote' => $quote->quote,
-            'author_id' => $quote->author_id,
-            'category_id' => $quote->category_id
+            'author' => $quote->author_id,
+            'category' => $quote->category_id
         ]);
     } else {
         echo json_encode(["message" => "No Quotes Found"]);
