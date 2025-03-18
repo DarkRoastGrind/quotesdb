@@ -23,12 +23,17 @@
   $quote->author_id = $data->author_id;
   $quote->category_id = $data->category_id;
 
-// Update Quote
-if($quote->update()) 
-{
-  echo json_encode(['message' => 'Quote Updated'], JSON_PRETTY_PRINT);
-} else
+  // Update post
+  if($quote->update()) 
+  {
+    echo json_encode(
+      array('message' => 'quote Updated')
+    );
+  } 
 
-{
-  echo json_encode(['message' => 'Quote Not Updated'], JSON_PRETTY_PRINT);
-}
+  else 
+  {
+    echo json_encode(
+      array('message' => 'quote not updated')
+    );
+  }

@@ -19,11 +19,13 @@
     // Get post
     $quote->read_single();
 
-    $quote_arr = [
-        'id' => $quote->id,
+    // Create array
+    $quote_arr = array(
+        'id' =>   $quote->id,
         'quote' => $quote->quote,
         'author_id' => $quote->author_id,
         'category_id' => $quote->category_id
-    ];
-    
-    echo json_encode($quote_arr, JSON_PRETTY_PRINT);
+    );
+
+    // Make JSON
+    print_r(json_encode($quote_arr));
