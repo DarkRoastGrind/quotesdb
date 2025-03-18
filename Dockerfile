@@ -39,7 +39,7 @@ RUN a2enmod rewrite
 # ENV VARIABLE_NAME=value
 
 # Expose port 80 to allow incoming connections to the container
-EXPOSE 80
+EXPOSE 5432
 
 # By default, Apache is started automatically. You can change or customize the startup command if necessary.
 # CMD ["apache2-foreground"]
