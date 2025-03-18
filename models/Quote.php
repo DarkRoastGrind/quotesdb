@@ -33,6 +33,24 @@
             $stmt->bindParam(':quote', $this->quote);
             $stmt->bindParam(':author_id', $this->author_id);
             $stmt->bindParam(':category_id', $this->category_id);
+
+            // Execute query
+            if ($stmt->execute()) 
+            {
+                // Get the inserted ID (auto-incremented)
+                $this->id = $this->conn->lastInsertId();
+
+                // Return success response
+                return json_encode([
+                    'id' => $this->id,
+                    'quote' => $this->quote,
+                    'author_id' => $this->author_id,
+                    'category_id' => $this->category_id
+                ]);
+            }
+
+            // Return failure response if insertion fails
+            return json_encode(['message' => 'Unable to create quote']);
         }
 
 
