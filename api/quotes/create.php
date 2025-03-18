@@ -25,18 +25,6 @@
   $quote->author_id = (int) $data->author_id;
   $quote->category_id = (int) $data->category_id;
 
-  // Create quote
-  if ($quote->create()) 
-  {
-    echo json_encode([
-        'id' => $quote->id,
-        'quote' => $quote->quote,
-        'author_id' => $quote->author_id,
-        'category_id' => $quote->category_id
-    ]);
-} 
+    // Create quote
+    $quote->create();
 
-else 
-{
-    echo json_encode(["message" => "Unable to create quote"]);
-}

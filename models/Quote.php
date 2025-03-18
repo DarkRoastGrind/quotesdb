@@ -25,7 +25,8 @@
             $authorStmt->execute();
         
             if ($authorStmt->rowCount() == 0) {
-                return json_encode(['message' => 'author_id Not Found']);
+                echo json_encode(['message' => 'author_id Not Found']);
+                exit();
             }
         
             // Check if category_id exists in the categories table
@@ -35,44 +36,36 @@
             $categoryStmt->execute();
         
             if ($categoryStmt->rowCount() == 0) {
-                return json_encode(['message' => 'category_id Not Found']);
+                echo json_encode(['message' => 'category_id Not Found']);
+                exit();
             }
         
             // Create Query
             $query = 'INSERT INTO ' . $this->table . ' (quote, author_id, category_id) 
-            VALUES (:quote, :author_id, :category_id)';
-            
-            // Prepare Statement
+                      VALUES (:quote, :author_id, :category_id)';
+        
             $stmt = $this->conn->prepare($query);
             
-            // Clean data
-            $this->id = isset($this->id) ? htmlspecialchars(strip_tags($this->id)) : null;
-            $this->quote = isset($this->quote) ? htmlspecialchars(strip_tags($this->quote)) : null;
-            $this->author_id = isset($this->author_id) ? htmlspecialchars(strip_tags($this->author_id)) : null;
-            $this->category_id = isset($this->category_id) ? htmlspecialchars(strip_tags($this->category_id)) : null;
-            
-            // Bind data
             $stmt->bindParam(':quote', $this->quote, PDO::PARAM_STR);
             $stmt->bindParam(':author_id', $this->author_id, PDO::PARAM_INT);
             $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
-            
-            // Execute query
-            if ($stmt->execute()) {
-                // Get the inserted ID (auto-incremented)
-                $this->id = $this->conn->lastInsertId();
         
-                // Return success response
-                return json_encode([
+            if ($stmt->execute()) 
+            {
+                $this->id = $this->conn->lastInsertId();
+                echo json_encode([
                     'id' => $this->id,
                     'quote' => $this->quote,
                     'author_id' => $this->author_id,
                     'category_id' => $this->category_id
                 ]);
+                exit();
             }
         
-            // Return failure response if insertion fails
-            return json_encode(['message' => 'Unable to create quote']);
+            echo json_encode(['message' => 'Unable to create quote']);
+            exit();
         }
+        
 
 
         public function delete() 
