@@ -46,16 +46,16 @@
             $stmt = $this->conn->prepare($query);
             
             // Clean data
-            $this->id = htmlspecialchars(strip_tags($this->id));
-            $this->quote = htmlspecialchars(strip_tags($this->quote));
-            $this->author_id = htmlspecialchars(strip_tags($this->author_id));
-            $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+            $this->id = isset($this->id) ? htmlspecialchars(strip_tags($this->id)) : null;
+            $this->quote = isset($this->quote) ? htmlspecialchars(strip_tags($this->quote)) : null;
+            $this->author_id = isset($this->author_id) ? htmlspecialchars(strip_tags($this->author_id)) : null;
+            $this->category_id = isset($this->category_id) ? htmlspecialchars(strip_tags($this->category_id)) : null;
             
             // Bind data
-            $stmt->bindParam(':id', $this->id);
-            $stmt->bindParam(':quote', $this->quote);
-            $stmt->bindParam(':author_id', $this->author_id);
-            $stmt->bindParam(':category_id', $this->category_id);
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindParam(':quote', $this->quote, PDO::PARAM_STR);
+            $stmt->bindParam(':author_id', $this->author_id, PDO::PARAM_INT);
+            $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
             
             // Execute query
             if ($stmt->execute()) {
