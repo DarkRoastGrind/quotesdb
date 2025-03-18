@@ -1,5 +1,5 @@
 SetEnv USERNAME "quotesdb_rzmc_user"
-SetEnv PASSWORD "your_user_name_value"
-SetEnv DBNAME "3ENFdlr5Ogz6O3yWHiiEBjcq5bbUq745"
-SetEnv HOST "dpg-cvc5f1dsvqrc73a3ee7g-a.oregon-postgres.render.com"
+SetEnv PASSWORD "3ENFdlr5Ogz6O3yWHiiEBjcq5bbUq745"
+SetEnv DBNAME "quotesdb_rzmc"
+SetEnv HOST "dpg-cvc5f1dsvqrc73a3ee7g-a.postgres.render.com"
 SetEnv PORT "5432"
