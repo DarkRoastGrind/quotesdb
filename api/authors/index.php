@@ -49,12 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             extract($row);
             $authors_arr[] = [
                 'id' => $id,
-                'name' => $name
+                'author' => $author
             ];
         }
         
         echo json_encode($authors_arr);
     }
-} else {
+} 
+
+else
+{
     echo json_encode(["message" => "Method not allowed"]);
 }
