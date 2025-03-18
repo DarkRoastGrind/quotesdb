@@ -91,7 +91,7 @@
             $stmt->bindParam(1, $this->id);
 
             // Execute query
-            $stmt->execute();
+            $stmt->execute($query);
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -117,7 +117,7 @@
           $stmt = $this->conn->prepare($query);
     
           // Execute query
-          $stmt->execute();
+          $stmt->execute($query);
     
           return $stmt;
         }
