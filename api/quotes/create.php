@@ -24,16 +24,16 @@
   $quote->category_id = $data->category_id;
 
   // Create quote
-  if($quote->create()) 
-  {
-    echo json_encode(
-      array('message' => 'quote Created')
-    );
-  } 
+  if ($quote->create()) {
+    echo json_encode([
+        'id' => $quote->id,
+        'quote' => $quote->quote,
+        'author_id' => $quote->author_id,
+        'category_id' => $quote->category_id
+    ]);
+} 
 
-  else 
-  {
-    echo json_encode(
-      array('message' => 'quote Not Created')
-    );
-  }
+else 
+{
+    echo json_encode(["message" => "Unable to create quote"]);
+}

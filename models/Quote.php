@@ -150,7 +150,7 @@
             $query = 'UPDATE ' .
             $this->table . '
             SET
-            quote = :quote
+            quote = :quote,
             author_id = :author_id,
             category_id = :category_id
             WHERE
