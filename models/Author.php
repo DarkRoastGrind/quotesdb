@@ -91,13 +91,32 @@
             $stmt->bindParam(1, $this->id);
 
             // Execute query
-            $stmt->execute();
+            if ($stmt->execute()) 
+            {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+                if ($row) 
+                {
+                    // Set properties
+                    $this->id = $row['id'];
+                    $this->author = $row['author'];
+                } 
 
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                else 
+                {
+                    // No author found
+                    echo json_encode(["message" => "No author Found"]);
+                    exit();
+                }
 
-            // set properties
-            $this->id = $row['id'];
-            $this->author = $row['author'];
+            } 
+
+            else 
+            {
+                // Query execution failed
+                echo json_encode(["message" => "Error executing query"]);
+                exit();
+            }
         }
 
 
@@ -121,6 +140,7 @@
     
           return $stmt;
         }
+
 
         public function update() 
         {
