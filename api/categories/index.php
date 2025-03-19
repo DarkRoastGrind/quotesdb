@@ -87,7 +87,7 @@ if ($method === 'POST')
 
     if (!isset($data->category) || empty(trim($data->category))) 
     {
-        echo json_encode(["message" => "Missing or empty 'category' field"]);
+        echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
