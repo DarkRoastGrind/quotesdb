@@ -75,12 +75,13 @@
             $quoteStmt = $this->conn->prepare($quoteQuery);
             $quoteStmt->bindParam(':id', $this->id);
             $quoteStmt->execute();
-        
+
             if ($quoteStmt->rowCount() == 0) {
                 // Quote does not exist
                 echo json_encode(['message' => 'No Quotes Found']);
                 exit();
             }
+
         
             // Create query
             $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';

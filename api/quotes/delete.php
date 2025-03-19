@@ -22,8 +22,7 @@ $data = json_decode(file_get_contents("php://input"));
 // Check if ID is provided
 if (empty($data->id)) 
 {
-    http_response_code(400); // Bad Request
-    echo json_encode(["message" => "Missing Required Parameters"]);
+    echo json_encode(["message" => "No Quotes Found"]);
     exit();
 }
 
@@ -31,5 +30,14 @@ if (empty($data->id))
 $quote->id = $data->id;
 
 // Attempt to delete the quote
-$quote->delete();
-exit();
+if ($quote->delete()) 
+{
+  echo json_encode(['id' => $quote->id]);
+  exit();
+} 
+
+else 
+{
+  echo json_encode(['message' => 'Quote Not Deleted']);
+  exit();
+}
