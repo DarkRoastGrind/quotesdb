@@ -21,8 +21,8 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Include necessary models and database connection
-require_once '../../models/Category.php';
-require_once '../../config/Database.php';
+include_once '../../models/Category.php';
+include_once '../../config/Database.php';
 
 // Instantiate DB & connect
 $database = new Database();
@@ -75,7 +75,7 @@ if ($method === 'GET')
                 ];
             }
             // Return all categories as JSON
-            echo json_encode($categoriess_arr);
+            echo json_encode($categories_arr);
         } 
 
         else 
@@ -85,4 +85,9 @@ if ($method === 'GET')
     }
 
     exit();
+}
+
+else
+{
+    echo json_encode(["message" => "Method not allowed"]);
 }
