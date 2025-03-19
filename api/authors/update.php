@@ -7,6 +7,7 @@
 
   include_once '../../config/Database.php';
   include_once '../../models/Author.php';
+
   // Instantiate DB & connect
   $database = new Database();
   $db = $database->connect();
@@ -17,18 +18,41 @@
   // Get raw posted data
   $data = json_decode(file_get_contents("php://input"));
 
-  // Set ID to UPDATE
-  $author->id = $data->id;
-
-  $author->author = $data->author;
-
-  // Update post
-  if($author->update()) 
+  // Check if all required parameters are provided
+  if (!isset($data->id) || !isset($data->author)) 
   {
-    echo json_encode((["message" => "Author Updated"]));
-  } 
-
-  else 
-  {
-    echo json_encode((["message" => "Author not updated"]));
+      echo json_encode(["message" => "Missing Required Parameters"]);
+      exit();
   }
+
+  // Assign values.
+  $author->id = (int) $data->id;
+  $author->author = trim($data->author);
+
+  // Check if author exists before updating
+  $query = "SELECT id FROM authors WHERE id = :id";
+  $stmt = $db->prepare($query);
+  $stmt->bindParam(':id', $author->id);
+  $stmt->execute();
+
+  if ($stmt->rowCount() == 0) 
+  {
+      echo json_encode(["message" => "No authors Found"]);
+      exit();
+  }
+
+// Attempt to update the author
+if ($author->update()) 
+{
+    echo json_encode([
+        "id" => $author->id,
+        "author" => $author->author
+    ]);
+} 
+
+else 
+{
+    echo json_encode(["message" => "Author Not Updated"]);
+}
+
+exit();
