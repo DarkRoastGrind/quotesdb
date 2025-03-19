@@ -131,33 +131,13 @@ if ($method === 'POST')
 
 
 // Handle PUT requests (Update an existing Quote)
-if ($method === 'PUT') 
-{
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // Get raw PUT data
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (empty($data->id)) 
-    {
-        echo json_encode(["message" => "quote ID Not Found"]);
-        exit();
-    }
-
-    if (empty($data->quote)) 
-    {
-        echo json_encode(["message" => "quote Not Found"]);
-        exit();
-    }
-
-    if (empty($data->author_id)) 
-    {
-        echo json_encode(["message" => "author_id Not Found"]);
-        exit();
-    }
-
-    if (empty($data->category_id)) 
-    {
-        echo json_encode(["message" => "category_id Not Found"]);
+    if (empty($data->id) || empty($data->quote) || empty($data->author_id) || empty($data->category_id)) {
+        echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
@@ -168,21 +148,7 @@ if ($method === 'PUT')
     $quote->category_id = (int) $data->category_id;
 
     // Attempt to update the quote
-    if ($quote->update()) 
-    {
-        echo json_encode([
-            'id' => $quote->id,
-            'quote' => $quote->quote,
-            'author_id' => $quote->author_id,
-            'category_id' => $quote->category_id
-        ]);
-    } 
-    
-    else 
-    {
-        echo json_encode(["message" => "No Quotes Found"]);
-    }
-
+    $quote->update();
     exit();
 }
 

@@ -159,14 +159,16 @@
           return $stmt;
         }
 
-        public function update() {
+        public function update() 
+        {
             // Check if author_id exists in the authors table
             $authorQuery = 'SELECT id FROM authors WHERE id = :author_id';
             $authorStmt = $this->conn->prepare($authorQuery);
             $authorStmt->bindParam(':author_id', $this->author_id);
             $authorStmt->execute();
         
-            if ($authorStmt->rowCount() == 0) {
+            if ($authorStmt->rowCount() == 0) 
+            {
                 echo json_encode(['message' => 'author_id Not Found']);
                 exit();
             }
@@ -177,7 +179,8 @@
             $categoryStmt->bindParam(':category_id', $this->category_id);
             $categoryStmt->execute();
         
-            if ($categoryStmt->rowCount() == 0) {
+            if ($categoryStmt->rowCount() == 0) 
+            {
                 echo json_encode(['message' => 'category_id Not Found']);
                 exit();
             }
@@ -188,7 +191,8 @@
             $quoteStmt->bindParam(':id', $this->id);
             $quoteStmt->execute();
         
-            if ($quoteStmt->rowCount() == 0) {
+            if ($quoteStmt->rowCount() == 0) 
+            {
                 echo json_encode(['message' => 'No Quotes Found']);
                 exit();
             }
@@ -216,7 +220,8 @@
             $stmt->bindParam(':category_id', $this->category_id);
         
             // Execute query
-            if ($stmt->execute()) {
+            if ($stmt->execute()) 
+            {
                 echo json_encode([
                     'id' => $this->id,
                     'quote' => $this->quote,
@@ -224,7 +229,10 @@
                     'category_id' => $this->category_id
                 ]);
                 exit();
-            } else {
+            } 
+            
+            else 
+            {
                 echo json_encode(['message' => 'Quote Not Updated']);
                 exit();
             }
