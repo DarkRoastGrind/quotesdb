@@ -125,7 +125,7 @@ if ($method === 'PUT')
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (!isset($data->id) || empty(trim($data->author))) 
+    if (!isset($data->id) || !isset($data->author) || empty(trim($data->author))) 
     {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
@@ -150,6 +150,7 @@ if ($method === 'PUT')
     }
     exit();
 }
+
 
 // Handle DELETE requests (Delete an author)
 if ($method === 'DELETE') 
