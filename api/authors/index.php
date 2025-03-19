@@ -120,3 +120,56 @@ if ($method === 'POST')
     }
     exit();
 }
+
+// Handle PUT requests (Update an existing Author)
+if ($method === 'PUT') 
+{
+    // Get raw PUT data
+    $data = json_decode(file_get_contents("php://input"));
+
+    // Ensure required parameters are present
+    if (empty($data->id) || empty($data->author)) 
+    {
+        echo json_encode(["message" => "Missing Required Parameters"]);
+        exit();
+    }
+
+    // Set updated author data
+    $author->id = (int) $data->id;
+    $author->author = trim($data->author);
+
+    // Attempt to update the author
+    $author->update();
+    exit();
+}
+
+// Handle DELETE requests (Delete an author)
+if ($method === 'DELETE') 
+{
+    // Get raw DELETE data
+    $_DELETE = json_decode(file_get_contents("php://input"), true);
+
+    if (!isset($_DELETE['id']) || empty($_DELETE['id'])) 
+    {
+        echo json_encode(["id" => null, "message" => "No authors Found"]);
+        exit();
+    }
+
+    $author->id = (int) $_DELETE['id'];
+    
+
+    // Attempt to delete the author
+    if ($author->delete()) 
+    {
+        // Return the 'id' field on success
+        echo json_encode(['id' => $author->id]);
+        exit();
+    } 
+
+    else 
+    {
+        // Include the 'id' field even in case of failure
+        echo json_encode(['id' => $author->id, 'message' => 'author Not Deleted']);
+        exit();
+    }
+}
