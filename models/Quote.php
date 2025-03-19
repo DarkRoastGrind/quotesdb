@@ -105,7 +105,7 @@
                 exit();
             }
         }
-        
+
         public function read_single()
         {
             // Create query
