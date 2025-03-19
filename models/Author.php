@@ -105,7 +105,7 @@
                 else 
                 {
                     // No author found
-                    echo json_encode(["message" => "No author Found"]);
+                    echo json_encode(["message" => "author_id Not Found"]);
                     exit();
                 }
 
