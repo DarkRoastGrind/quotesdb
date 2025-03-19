@@ -1,15 +1,10 @@
 <?php
-// Disable error reporting to prevent HTML errors from being output
-ini_set('display_errors', 0);
-error_reporting(0);
-
 // Headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-// Include necessary files
 include_once '../../config/Database.php';
 include_once '../../models/Quote.php';
 
@@ -22,14 +17,6 @@ $quote = new Quote($db);
 
 // Get raw posted data
 $data = json_decode(file_get_contents("php://input"));
-
-// Check if JSON data is valid
-if (!$data) 
-{
-    http_response_code(400); // Bad Request
-    echo json_encode(["message" => "Invalid JSON data"]);
-    exit();
-}
 
 // Check if all required parameters are provided
 if (!isset($data->id) || !isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
@@ -60,12 +47,7 @@ if ($stmt->rowCount() == 0) {
 $query = "SELECT id FROM authors WHERE id = :author_id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':author_id', $quote->author_id);
-
-if (!$stmt->execute()) {
-    http_response_code(500); // Internal Server Error
-    echo json_encode(["message" => "Error checking author_id"]);
-    exit();
-}
+$stmt->execute();
 
 if ($stmt->rowCount() == 0) {
     http_response_code(404); // Not Found
@@ -77,12 +59,7 @@ if ($stmt->rowCount() == 0) {
 $query = "SELECT id FROM categories WHERE id = :category_id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':category_id', $quote->category_id);
-
-if (!$stmt->execute()) {
-    http_response_code(500); // Internal Server Error
-    echo json_encode(["message" => "Error checking category_id"]);
-    exit();
-}
+$stmt->execute();
 
 if ($stmt->rowCount() == 0) {
     http_response_code(404); // Not Found
