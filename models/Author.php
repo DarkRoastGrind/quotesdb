@@ -8,7 +8,6 @@
         public $id;
         public $author;
 
-        //Constructor with DB
         public function __construct($db)
         {
             $this->conn = $db;
@@ -24,7 +23,7 @@
             $stmt = $this->conn->prepare($query);
         
             // Bind data
-            $stmt->bindParam(':author', $this->author, PDO::PARAM_STR);
+            $stmt->bindParam(':author', $this->author, PDO::PARAM_STR_CHAR);
 
             if ($stmt->execute()) 
             {

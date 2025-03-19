@@ -99,7 +99,6 @@ if ($method === 'POST')
         echo json_encode([
             "message" => "Missing Required Parameters"
         ]);
-        
         exit();
     }
 
@@ -120,10 +119,4 @@ if ($method === 'POST')
         echo json_encode(["message" => "Unable to create author"]);
     }
     exit();
-}
-
-
-else
-{
-    echo json_encode(["message" => "Method not allowed"]);
 }

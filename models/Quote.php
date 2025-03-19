@@ -10,7 +10,6 @@
         public $author_id;
         public $category_id;
 
-
         public function __construct($db)
         {
             $this->conn = $db;
@@ -24,7 +23,8 @@
             $authorStmt->bindParam(':author_id', $this->author_id);
             $authorStmt->execute();
         
-            if ($authorStmt->rowCount() == 0) {
+            if ($authorStmt->rowCount() == 0) 
+            {
                 echo json_encode(['message' => 'author_id Not Found']);
                 exit();
             }
@@ -35,7 +35,8 @@
             $categoryStmt->bindParam(':category_id', $this->category_id);
             $categoryStmt->execute();
         
-            if ($categoryStmt->rowCount() == 0) {
+            if ($categoryStmt->rowCount() == 0) 
+            {
                 echo json_encode(['message' => 'category_id Not Found']);
                 exit();
             }
