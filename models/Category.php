@@ -99,7 +99,7 @@
                 {
                     // Set properties
                     $this->id = $row['id'];
-                    $this->category = $row['acategory'];
+                    $this->category = $row['category'];
                 } 
 
                 else 

@@ -58,17 +58,17 @@ if ($method === 'GET')
         // Check if any categorys exist
         if ($num > 0) 
         {
-            $categories_arr = [];
+            $cat_arr = [];
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
             {
                 extract($row);
-                $categories_arr[] = [
+                $cat_arr[] = [
                     'id' => $id,
                     'category' => $category
                 ];
             }
             // Return all categories as JSON
-            echo json_encode($categories_arr);
+            echo json_encode($cat_arr);
         } 
 
         else 
