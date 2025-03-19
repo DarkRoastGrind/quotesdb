@@ -18,7 +18,7 @@
             if (empty($this->author)) 
             {
                 echo json_encode(["message" => "Author field cannot be empty"]);
-                return false;
+                exit();
             }
 
             // Create Query
@@ -140,36 +140,53 @@
 
         public function update() 
         {
+            if (empty($this->id)) 
+            {
+                echo json_encode(["message" => "ID field cannot be empty"]);
+                exit();
+            }
+
+            if (empty($this->author)) 
+            {
+                echo json_encode(["message" => "Author field cannot be empty"]);
+                exit();
+            }
+
             // Create Query
             $query = 'UPDATE ' .
             $this->table . '
-            SET
-            id = :id,
-            author = :author
-            WHERE
-            id = :id';
+                SET 
+                    id = :id,
+                    author = :author
+                WHERE 
+                    id = :id';
             
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
             
             // Clean data
-            $this->author = htmlspecialchars(strip_tags($this->author));
-            $this->id = htmlspecialchars(strip_tags($this->id));
+            $this->author = $this->author ? htmlspecialchars(strip_tags($this->author)) : '';
+            $this->id = (int) htmlspecialchars(strip_tags($this->id));
             
             // Bind data
             $stmt-> bindParam(':author', $this->author);
             $stmt-> bindParam(':id', $this->id);
             
             // Execute query
-            if($stmt->execute()) 
+            if ($stmt->execute()) 
             {
-                return true;
+                echo json_encode([
+                    'id' => $this->id,
+                    'author' => $this->author
+                ]);
+                exit();
+            } 
+            
+            else 
+            {
+                echo json_encode(['message' => 'Author Not Updated']);
+                exit();
             }
-            /*
-            // Print error if something goes wrong
-            printf("Error: $s.\n", $stmt->error);
-            */
-            return false;
         }
 
     }
