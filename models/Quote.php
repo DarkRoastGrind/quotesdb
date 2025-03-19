@@ -68,44 +68,35 @@
         
 
 
-        public function delete() 
-        {
-            // Check if the quote exists
-            $quoteQuery = 'SELECT id FROM ' . $this->table . ' WHERE id = :id';
-            $quoteStmt = $this->conn->prepare($quoteQuery);
-            $quoteStmt->bindParam(':id', $this->id);
-            $quoteStmt->execute();
+// Delete method in Quote.php
+public function delete() 
+{
+    // Check if the quote exists
+    $quoteQuery = 'SELECT id FROM ' . $this->table . ' WHERE id = :id';
+    $quoteStmt = $this->conn->prepare($quoteQuery);
+    $quoteStmt->bindParam(':id', $this->id);
+    $quoteStmt->execute();
 
-            if ($quoteStmt->rowCount() == 0) {
-                // Quote does not exist
-                echo json_encode(['message' => 'No Quotes Found']);
-                exit();
-            }
+    if ($quoteStmt->rowCount() == 0) {
+        // Quote does not exist
+        echo json_encode(['message' => 'No Quotes Found']);
+        exit();  // Ensures that the response is sent back
+    }
 
-        
-            // Create query
-            $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
-        
-            // Prepare Statement
-            $stmt = $this->conn->prepare($query);
-        
-            // Clean data
-            $this->id = htmlspecialchars(strip_tags($this->id));
-        
-            // Bind Data
-            $stmt->bindParam(':id', $this->id);
-        
-            // Execute query
-            if ($stmt->execute()) {
-                // Quote deleted successfully
-                echo json_encode(['id' => $this->id]);
-                exit();
-            } else {
-                // Failed to delete quote
-                echo json_encode(['message' => 'Quote Not Deleted']);
-                exit();
-            }
-        }
+    // Proceed with deletion
+    $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
+    $stmt = $this->conn->prepare($query);
+    $this->id = htmlspecialchars(strip_tags($this->id));
+    $stmt->bindParam(':id', $this->id);
+
+    // Execute delete query
+    if ($stmt->execute()) {
+        return true; // Return true if deletion is successful
+    } else {
+        return false; // Return false if deletion fails
+    }
+}
+
 
         public function read_single()
         {
