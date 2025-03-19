@@ -1,8 +1,4 @@
 <?php
-// Disable error reporting to prevent HTML errors from being output
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 // Enable CORS and set response type
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -16,7 +12,6 @@ if ($method === 'OPTIONS')
     header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
     exit();
 }
-
 
 // Include necessary models and database connection
 include_once '../../config/Database.php';

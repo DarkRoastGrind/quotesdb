@@ -1,8 +1,4 @@
 <?php
-// Disable error reporting to prevent HTML errors from being output
-ini_set('display_errors', 0);
-error_reporting(0);
-
 // Enable CORS and set response type
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -16,9 +12,6 @@ if ($method === 'OPTIONS')
     header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
     exit();
 }
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 // Include necessary models and database connection
 include_once '../../models/Author.php';
@@ -96,14 +89,18 @@ if ($method === 'POST')
     // Ensure required parameters are present
     if (empty($data->author)) 
     {
-        echo json_encode([
-            "message" => "Missing Required Parameters"
-        ]);
+        echo json_encode(["message" => "Missing Required Parameters"]);
+        exit();
+    }
+
+    // Ensure required parameters are present
+    if (!isset($data->author) || empty(trim($data->author))) {
+        echo json_encode(["message" => "Missing or empty 'author' field"]);
         exit();
     }
 
     // Set author data
-    $author->author = $data->author;
+    $author->author = trim($data->author);
 
     // Attempt to create the author
     if ($author->create()) 

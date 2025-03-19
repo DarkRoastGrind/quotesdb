@@ -18,15 +18,25 @@
   // Get raw posted data
   $data = json_decode(file_get_contents("php://input"));
 
-  if (!isset($data->author) || empty($data->author) || !is_string($data->author)) 
+  if (!isset($data->author)|| empty(trim($data->author)))
   {
       echo json_encode(["message" => "Missing required fields"]);
       exit();
   }
-  
-  $author->author = trim($data->author);
 
-    // Create author
-    $author->create();
+  $author->author = trim($data->author);
+  
+  // Create author
+  if ($author->create()) 
+  {
+      echo json_encode(["message" => "Author Created"]);
+  } 
+
+  else 
+  {
+      echo json_encode(["message" => "Unable to create author"]);
+  }
+  
+  exit();
 
 

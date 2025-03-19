@@ -17,7 +17,7 @@
         {
             if (empty($this->author)) 
             {
-                echo json_encode(["message" => "Author cannot be empty"]);
+                echo json_encode(["message" => "Author field cannot be empty"]);
                 return false;
             }
 
@@ -29,7 +29,7 @@
             $stmt = $this->conn->prepare($query);
         
             // Bind data
-            $stmt->bindParam(':author', $this->author, PDO::PARAM_STR_CHAR);
+            $stmt->bindParam(':author', $this->author, PDO::PARAM_STR);
 
             if ($stmt->execute()) 
             {
