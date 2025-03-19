@@ -23,10 +23,6 @@
       echo json_encode(["message" => "Missing required fields"]);
       exit();
   }
-  
-  $quote->quote = trim($data->quote);
-  $quote->author_id = (int) $data->author_id;
-  $quote->category_id = (int) $data->category_id;
 
     // Create quote
     $quote->create();
