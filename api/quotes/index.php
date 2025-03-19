@@ -164,7 +164,7 @@ if ($method === 'DELETE')
     // Ensure ID is passed for deletion
     if (empty($_DELETE['id'])) 
     {
-        // Return "No Quotes Found" with an empty 'id' field
+        // Return 'id' as null if the quote ID is missing
         echo json_encode(["id" => null, "message" => "No Quotes Found"]);
         exit();
     }
@@ -175,16 +175,17 @@ if ($method === 'DELETE')
     // Attempt to delete the quote
     if ($quote->delete()) 
     {
-        // If deletion is successful, return the id
+        // Return the 'id' field on success
         echo json_encode(['id' => $quote->id]);
         exit();
     } 
     else 
     {
-        // If deletion fails, return a failure message
+        // Include the 'id' field even in case of failure
         echo json_encode(['id' => $quote->id, 'message' => 'Quote Not Deleted']);
         exit();
     }
 }
+
 
 

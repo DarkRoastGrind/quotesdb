@@ -22,7 +22,8 @@ $data = json_decode(file_get_contents("php://input"));
 // Check if ID is provided
 if (empty($data->id)) 
 {
-    echo json_encode(["message" => "No Quotes Found"]);
+    // Include the 'id' field in the response (null if missing)
+    echo json_encode(["id" => null, "message" => "No Quotes Found"]);
     exit();
 }
 
@@ -32,12 +33,14 @@ $quote->id = $data->id;
 // Attempt to delete the quote
 if ($quote->delete()) 
 {
-  echo json_encode(['id' => $quote->id]);
-  exit();
+    // Return the 'id' field on success
+    echo json_encode(['id' => $quote->id]);
+    exit();
 } 
 
 else 
 {
-  echo json_encode(['message' => 'Quote Not Deleted']);
-  exit();
+    // Include the 'id' field even in case of failure
+    echo json_encode(['id' => $quote->id, 'message' => 'Quote Not Deleted']);
+    exit();
 }
