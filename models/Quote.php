@@ -125,13 +125,11 @@
                     $this->category_id = $row['category_id'];
                 } else {
                     // No quote found
-                    http_response_code(404); // Not Found
                     echo json_encode(["message" => "No Quotes Found"]);
                     exit();
                 }
             } else {
                 // Query execution failed
-                http_response_code(500); // Internal Server Error
                 echo json_encode(["message" => "Error executing query"]);
                 exit();
             }

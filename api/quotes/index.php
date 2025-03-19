@@ -1,6 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// Disable error reporting to prevent HTML errors from being output
+ini_set('display_errors', 0);
+error_reporting(0);
+
 // Enable CORS and set response type
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
