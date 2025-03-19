@@ -16,34 +16,35 @@
 
         public function create() 
         {
+            if (empty($this->category)) 
+            {
+                echo json_encode(["message" => "category field cannot be empty"]);
+                exit();
+            }
+
             // Create Query
-            $query = 'INSERT INTO ' .
-              $this->table . '
-            SET
-                id = :id,
-                category = :category';
+            $query = 'INSERT INTO ' . $this->table . ' (category) 
+                      VALUES (:category)';
         
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
         
-            // Clean data
-            $this->category = htmlspecialchars(strip_tags($this->category));
-            $this->id = htmlspecialchars(strip_tags($this->id));
-        
             // Bind data
-            $stmt-> bindParam(':category', $this->category);
-            $stmt-> bindParam(':id', $this->id);
+            $stmt->bindParam(':category', $this->category, PDO::PARAM_STR);
 
-            // Execute query
-            if($stmt->execute()) 
+            if ($stmt->execute()) 
             {
-                return true;
+                $this->id = $this->conn->lastInsertId();
+                echo json_encode([
+                    'id' => $this->id,
+                    'category' => $this->category
+                ]);
+
+                exit();
             }
-            /*
-            // Print error if something goes wrong
-            printf("Error: $s.\n", $stmt->error);
-            */
-            return false;
+        
+            echo json_encode(['message' => 'Unable to create category']);
+            exit();
         }
 
         public function delete() 
@@ -98,7 +99,7 @@
                 {
                     // Set properties
                     $this->id = $row['id'];
-                    $this->category = $row['category'];
+                    $this->category = $row['acategory'];
                 } 
 
                 else 
@@ -140,36 +141,40 @@
 
         public function update() 
         {
-            // Create Query
-            $query = 'UPDATE ' .
-            $this->table . '
-            SET
-            id = :id,
-            category = :category
-            WHERE
-            id = :id';
-            
+            // Check if category ID exists before updating
+            $checkQuery = 'SELECT id FROM ' . $this->table . ' WHERE id = :id';
+            $checkStmt = $this->conn->prepare($checkQuery);
+            $checkStmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $checkStmt->execute();
+        
+            if ($checkStmt->rowCount() === 0) {
+                echo json_encode(["message" => "Category Not Found"]);
+                return false;
+            }
+        
+            // Update Query (DO NOT update ID)
+            $query = 'UPDATE ' . $this->table . ' 
+                      SET category = :category
+                      WHERE id = :id';
+        
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
-            
+        
             // Clean data
+            $this->id = (int) htmlspecialchars(strip_tags($this->id));
             $this->category = htmlspecialchars(strip_tags($this->category));
-            $this->id = htmlspecialchars(strip_tags($this->id));
-            
+        
             // Bind data
-            $stmt-> bindParam(':category', $this->category);
-            $stmt-> bindParam(':id', $this->id);
-            
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindParam(':category', $this->category, PDO::PARAM_STR);
+        
             // Execute query
-            if($stmt->execute()) 
-            {
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
                 return true;
+            } else {
+                echo json_encode(["message" => "No Changes Made"]);
+                return false;
             }
-            /*
-            // Print error if something goes wrong
-            printf("Error: $s.\n", $stmt->error);
-            */
-            return false;
         }
 
     }

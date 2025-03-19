@@ -2,7 +2,7 @@
     class Author{
         //DB Stuff
         private $conn;
-        private $table = 'authors';
+        private $table = 'Authors';
 
         //Properties
         public $id;
@@ -175,6 +175,5 @@
                 return false;
             }
         }
-        
 
     }

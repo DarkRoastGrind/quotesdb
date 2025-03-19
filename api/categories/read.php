@@ -19,28 +19,28 @@
   // Get row count
   $num = $result->rowCount();
 
-  // Check if any categorys
+  // Check if any categories
   if($num > 0) 
   {
         // Cat array
-        $auth_arr = array();
-        $auth_arr['data'] = array();
+        $categories_arr = array();
+        $categories_arr['data'] = array();
 
         while($row = $result->fetch(PDO::FETCH_ASSOC)) 
         {
           extract($row);
 
-          $auth_item = array(
+          $categories_item = array(
             'id' => $id,
             'category' => $category
           );
 
           // Push to "data"
-          array_push($auth_arr['data'], $auth_item);
+          array_push($categories_arr['data'], $categories_item);
         }
 
         // Turn to JSON & output
-        echo json_encode($auth_arr);
+        echo json_encode($categoriesh_arr);
 
   } 
 

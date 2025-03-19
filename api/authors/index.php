@@ -151,7 +151,6 @@ if ($method === 'PUT')
     exit();
 }
 
-
 // Handle DELETE requests (Delete an author)
 if ($method === 'DELETE') 
 {

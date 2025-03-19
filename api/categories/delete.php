@@ -23,14 +23,10 @@
   // Delete post
   if($category->delete()) 
   {
-    echo json_encode(
-      array('message' => 'category deleted')
-    );
+    echo json_encode((["message" => "Category deleted"]));
   } 
 
   else 
   {
-    echo json_encode(
-      array('message' => 'category not deleted')
-    );
+    echo json_encode((["message" => "Category not deleted"]));
   }

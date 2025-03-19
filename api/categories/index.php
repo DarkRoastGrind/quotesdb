@@ -1,8 +1,4 @@
 <?php
-// Disable error reporting to prevent HTML errors from being output
-ini_set('display_errors', 0);
-error_reporting(0);
-
 // Enable CORS and set response type
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -16,9 +12,6 @@ if ($method === 'OPTIONS')
     header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
     exit();
 }
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 // Include necessary models and database connection
 include_once '../../models/Category.php';
@@ -87,7 +80,104 @@ if ($method === 'GET')
     exit();
 }
 
-else
+// Handle POST requests (Create a new category)
+if ($method === 'POST') 
 {
-    echo json_encode(["message" => "Method not allowed"]);
+    // Get raw POST data
+    $data = json_decode(file_get_contents("php://input"));
+
+    // Ensure required parameters are present
+    if (empty($data->category)) 
+    {
+        echo json_encode(["message" => "Missing Required Parameters"]);
+        exit();
+    }
+
+    // Ensure required parameters are present
+    if (!isset($data->category) || empty(trim($data->category))) {
+        echo json_encode(["message" => "Missing or empty 'category' field"]);
+        exit();
+    }
+
+    // Set category data
+    $category->category = trim($data->category);
+
+    // Attempt to create the category
+    if ($category->create()) 
+    {
+        echo json_encode([
+            'id' => $category->id,
+            'category' => $category->category
+        ]);
+    } 
+
+    else 
+    {
+        echo json_encode(["message" => "Unable to create category"]);
+    }
+    exit();
+}
+
+// Handle PUT requests (Update an existing category)
+if ($method === 'PUT') 
+{
+    // Get raw PUT data
+    $data = json_decode(file_get_contents("php://input"));
+
+    // Ensure required parameters are present
+    if (!isset($data->id) || !isset($data->category) || empty(trim($data->category))) 
+    {
+        echo json_encode(["message" => "Missing Required Parameters"]);
+        exit();
+    }
+
+    // Set updated category data
+    $category->id = (int) $data->id;
+    $category->category = trim($data->category);
+
+    // Attempt to update the category
+    if ($category->update()) 
+    {
+        echo json_encode([
+            "id" => $category->id,
+            "category" => $category->category
+        ]);
+    } 
+
+    else 
+    {
+        echo json_encode(["message" => "Unable to update category"]);
+    }
+    exit();
+}
+
+// Handle DELETE requests (Delete an category)
+if ($method === 'DELETE') 
+{
+    // Get raw DELETE data
+    $_DELETE = json_decode(file_get_contents("php://input"), true);
+
+    if (!isset($_DELETE['id']) || empty($_DELETE['id'])) 
+    {
+        echo json_encode(["id" => null, "message" => "No categoryies Found"]);
+        exit();
+    }
+
+    $category->id = (int) $_DELETE['id'];
+    
+
+    // Attempt to delete the category
+    if ($category->delete()) 
+    {
+        // Return the 'id' field on success
+        echo json_encode(['id' => $category->id]);
+        exit();
+    } 
+
+    else 
+    {
+        // Include the 'id' field even in case of failure
+        echo json_encode(['id' => $category->id, 'message' => 'category Not Deleted']);
+        exit();
+    }
 }
