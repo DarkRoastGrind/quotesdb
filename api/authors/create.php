@@ -18,7 +18,7 @@
   // Get raw posted data
   $data = json_decode(file_get_contents("php://input"));
 
-  if (!isset($data->author)) 
+  if (!isset($data->author) || empty($data->author) || !is_string($data->author)) 
   {
       echo json_encode(["message" => "Missing required fields"]);
       exit();
