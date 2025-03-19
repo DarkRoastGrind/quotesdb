@@ -83,26 +83,16 @@ if ($method === 'GET')
 // Handle POST requests (Create a new category)
 if ($method === 'POST') 
 {
-    // Get raw POST data
     $data = json_decode(file_get_contents("php://input"));
 
-    // Ensure required parameters are present
-    if (empty($data->category)) 
+    if (!isset($data->category) || empty(trim($data->category))) 
     {
-        echo json_encode(["message" => "Missing Required Parameters"]);
-        exit();
-    }
-
-    // Ensure required parameters are present
-    if (!isset($data->category) || empty(trim($data->category))) {
         echo json_encode(["message" => "Missing or empty 'category' field"]);
         exit();
     }
 
-    // Set category data
     $category->category = trim($data->category);
 
-    // Attempt to create the category
     if ($category->create()) 
     {
         echo json_encode([
@@ -117,6 +107,7 @@ if ($method === 'POST')
     }
     exit();
 }
+
 
 // Handle PUT requests (Update an existing category)
 if ($method === 'PUT') 
@@ -154,30 +145,23 @@ if ($method === 'PUT')
 // Handle DELETE requests (Delete an category)
 if ($method === 'DELETE') 
 {
-    // Get raw DELETE data
-    $_DELETE = json_decode(file_get_contents("php://input"), true);
+    $data = json_decode(file_get_contents("php://input"), true);
 
-    if (!isset($_DELETE['id']) || empty($_DELETE['id'])) 
+    if (!isset($data['id']) || empty($data['id'])) 
     {
-        echo json_encode(["id" => null, "message" => "No categoryies Found"]);
+        echo json_encode(["message" => "No category found"]);
         exit();
     }
 
-    $category->id = (int) $_DELETE['id'];
-    
+    $category->id = (int) $data['id'];
 
-    // Attempt to delete the category
     if ($category->delete()) 
     {
-        // Return the 'id' field on success
         echo json_encode(['id' => $category->id]);
-        exit();
     } 
-
     else 
     {
-        // Include the 'id' field even in case of failure
-        echo json_encode(['id' => $category->id, 'message' => 'category Not Deleted']);
-        exit();
+        echo json_encode(['id' => $category->id, 'message' => 'Category Not Deleted']);
     }
+    exit();
 }
