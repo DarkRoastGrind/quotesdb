@@ -140,52 +140,41 @@
 
         public function update() 
         {
-            if (empty($this->id)) 
-            {
-                echo json_encode(["message" => "ID field cannot be empty"]);
-                exit();
+            // Check if author ID exists before updating
+            $checkQuery = 'SELECT id FROM ' . $this->table . ' WHERE id = :id';
+            $checkStmt = $this->conn->prepare($checkQuery);
+            $checkStmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $checkStmt->execute();
+        
+            if ($checkStmt->rowCount() === 0) {
+                echo json_encode(["message" => "Author Not Found"]);
+                return false;
             }
-
-            if (empty($this->author)) 
-            {
-                echo json_encode(["message" => "Author field cannot be empty"]);
-                exit();
-            }
-
-            // Create Query
-            $query = 'UPDATE ' . $this->table . '
-                SET 
-                    id = :id,
-                    author = :author
-                WHERE 
-                    id = :id';
-            
+        
+            // Update Query (DO NOT update ID)
+            $query = 'UPDATE ' . $this->table . ' 
+                      SET author = :author
+                      WHERE id = :id';
+        
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
-            
+        
             // Clean data
             $this->id = (int) htmlspecialchars(strip_tags($this->id));
-            $this->author = $this->author ? htmlspecialchars(strip_tags($this->author)) : '';
-            
+            $this->author = htmlspecialchars(strip_tags($this->author));
+        
             // Bind data
-            $stmt-> bindParam(':id', $this->id);
-            $stmt-> bindParam(':author', $this->author);
-            
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindParam(':author', $this->author, PDO::PARAM_STR);
+        
             // Execute query
-            if ($stmt->execute()) 
-            {
-                echo json_encode([
-                    'id' => $this->id,
-                    'author' => $this->author
-                ]);
-                exit();
-            } 
-            
-            else 
-            {
-                echo json_encode(['message' => 'Author Not Updated']);
-                exit();
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return true;
+            } else {
+                echo json_encode(["message" => "No Changes Made"]);
+                return false;
             }
         }
+        
 
     }

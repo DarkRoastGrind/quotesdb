@@ -125,7 +125,7 @@ if ($method === 'PUT')
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (empty($data->id) || empty($data->author)) 
+    if (!isset($data->id) || empty(trim($data->author))) 
     {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
@@ -136,7 +136,18 @@ if ($method === 'PUT')
     $author->author = trim($data->author);
 
     // Attempt to update the author
-    $author->update();
+    if ($author->update()) 
+    {
+        echo json_encode([
+            "id" => $author->id,
+            "author" => $author->author
+        ]);
+    } 
+
+    else 
+    {
+        echo json_encode(["message" => "Unable to update author"]);
+    }
     exit();
 }
 

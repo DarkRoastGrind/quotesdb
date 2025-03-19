@@ -25,15 +25,18 @@ if (!isset($data->id) || !isset($data->author))
     exit();
 }
 
-  // Create author
-  if ($author->create()) 
+  // Update author
+  if ($author->update()) 
   {
-      echo json_encode(["message" => "Author Created"]);
+      echo json_encode([
+          "id" => $author->id,
+          "author" => $author->author
+      ]);
   } 
 
   else 
   {
-      echo json_encode(["message" => "Unable to create author"]);
+      echo json_encode(["message" => "Unable to update author"]);
   }
-  
+
   exit();
