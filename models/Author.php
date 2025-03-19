@@ -46,7 +46,6 @@
             return false;
         }
 
-
         public function delete() 
         {
             // Create query
@@ -119,8 +118,6 @@
             }
         }
 
-
-        // Read function
         public function read() 
         {
           // Create query
@@ -140,7 +137,6 @@
     
           return $stmt;
         }
-
 
         public function update() 
         {

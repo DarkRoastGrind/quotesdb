@@ -10,7 +10,7 @@
         public $author_id;
         public $category_id;
 
-        //Constructor with DB
+
         public function __construct($db)
         {
             $this->conn = $db;
@@ -66,9 +66,6 @@
             exit();
         }
         
-
-
-// Delete method in Quote.php
         public function delete() 
         {
             // Check if the quote exists
@@ -97,7 +94,6 @@
                 return false; // Return false if deletion fails
             }
         }
-
 
         public function read_single()
         {
@@ -140,8 +136,6 @@
             }
         }
 
-
-        // Read function
         public function read() 
         {
           // Create query

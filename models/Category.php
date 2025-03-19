@@ -46,7 +46,6 @@
             return false;
         }
 
-
         public function delete() 
         {
             // Create query
@@ -91,17 +90,34 @@
             $stmt->bindParam(1, $this->id);
 
             // Execute query
-            $stmt->execute();
+            if ($stmt->execute()) 
+            {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+                if ($row) 
+                {
+                    // Set properties
+                    $this->id = $row['id'];
+                    $this->category = $row['category'];
+                } 
 
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                else 
+                {
+                    // No category found
+                    echo json_encode(["message" => "category_id Not Found"]);
+                    exit();
+                }
 
-            // set properties
-            $this->id = $row['id'];
-            $this->category = $row['category'];
+            } 
+
+            else 
+            {
+                // Query execution failed
+                echo json_encode(["message" => "Error executing query"]);
+                exit();
+            }
         }
 
-
-        // Read function
         public function read() 
         {
           // Create query
