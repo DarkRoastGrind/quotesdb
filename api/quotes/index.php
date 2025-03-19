@@ -135,35 +135,35 @@ if ($method === 'PUT')
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (empty($_PUT['id'])) 
+    if (empty($data->id)) 
     {
         echo json_encode(["message" => "quote ID Not Found"]);
         exit();
     }
 
-    if (empty($_PUT['quote'])) 
+    if (empty($data->quote)) 
     {
         echo json_encode(["message" => "quote Not Found"]);
         exit();
     }
 
-    if (empty($_PUT['author_id'])) 
+    if (empty($data->author_id)) 
     {
         echo json_encode(["message" => "author_id Not Found"]);
         exit();
     }
 
-    if (empty($_PUT['category_id'])) 
+    if (empty($data->category_id)) 
     {
         echo json_encode(["message" => "category_id Not Found"]);
         exit();
     }
 
     // Set updated Quote data
-    $quote->id = $_PUT['id'];
-    $quote->quote = $_PUT['quote'];
-    $quote->author_id = $_PUT['author_id'];
-    $quote->category_id = $_PUT['category_id'];
+    $quote->id = (int) $data->id;
+    $quote->quote = trim($data->quote);
+    $quote->author_id = (int) $data->author_id;
+    $quote->category_id = (int) $data->category_id;
 
     // Attempt to update the quote
     if ($quote->update()) 
@@ -183,6 +183,7 @@ if ($method === 'PUT')
 
     exit();
 }
+
 
 // Handle DELETE requests (Delete a Quote)
 if ($method === 'DELETE') 

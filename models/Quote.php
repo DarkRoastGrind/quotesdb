@@ -164,48 +164,30 @@
           return $stmt;
         }
 
-        public function update() 
-        {
-            try 
-            {
-                // Create Query
-                $query = 'UPDATE ' . $this->table . '
-                          SET quote = :quote,
-                              author_id = :author_id,
-                              category_id = :category_id
-                          WHERE id = :id';
+        public function update() {
+            // Create Query
+            $query = 'UPDATE ' . $this->table . '
+                      SET quote = :quote,
+                          author_id = :author_id,
+                          category_id = :category_id
+                      WHERE id = :id';
         
-                // Prepare Statement
-                $stmt = $this->conn->prepare($query);
+            // Prepare Statement
+            $stmt = $this->conn->prepare($query);
         
-                // Clean data
-                $this->quote = htmlspecialchars(strip_tags($this->quote));
-                $this->id = htmlspecialchars(strip_tags($this->id));
-                $this->author_id = htmlspecialchars(strip_tags($this->author_id));
-                $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+            // Clean data
+            $this->quote = $this->quote ? htmlspecialchars(strip_tags($this->quote)) : '';
+            $this->id = (int) htmlspecialchars(strip_tags($this->id));
+            $this->author_id = (int) htmlspecialchars(strip_tags($this->author_id));
+            $this->category_id = (int) htmlspecialchars(strip_tags($this->category_id));
         
-                // Bind data
-                $stmt->bindParam(':quote', $this->quote);
-                $stmt->bindParam(':id', $this->id);
-                $stmt->bindParam(':author_id', $this->author_id);
-                $stmt->bindParam(':category_id', $this->category_id);
+            // Bind data
+            $stmt->bindParam(':quote', $this->quote);
+            $stmt->bindParam(':id', $this->id);
+            $stmt->bindParam(':author_id', $this->author_id);
+            $stmt->bindParam(':category_id', $this->category_id);
         
-                // Execute query
-                if ($stmt->execute()) 
-                {
-                    return true;
-                }
-        
-                return false;
-            } 
-
-            catch (PDOException $e) 
-            {
-                echo json_encode(["message" => "Error: " . $e->getMessage()]);
-                exit();
-            }
+            // Execute query
+            return $stmt->execute();
         }
-        
-        
-
     }
