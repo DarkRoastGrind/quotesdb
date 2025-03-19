@@ -87,6 +87,42 @@ if ($method === 'GET')
     exit();
 }
 
+// Handle POST requests (Create a new author)
+if ($method === 'POST') 
+{
+    // Get raw POST data
+    $data = json_decode(file_get_contents("php://input"));
+
+    // Ensure required parameters are present
+    if (empty($data->author)) 
+    {
+        echo json_encode([
+            "message" => "Missing Required Parameters"
+        ]);
+        
+        exit();
+    }
+
+    // Set author data
+    $author->author = $data->author;
+
+    // Attempt to create the author
+    if ($author->create()) 
+    {
+        echo json_encode([
+            'id' => $author->id,
+            'author' => $author->author
+        ]);
+    } 
+
+    else 
+    {
+        echo json_encode(["message" => "Unable to create author"]);
+    }
+    exit();
+}
+
+
 else
 {
     echo json_encode(["message" => "Method not allowed"]);

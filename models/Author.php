@@ -17,11 +17,8 @@
         public function create() 
         {
             // Create Query
-            $query = 'INSERT INTO ' .
-              $this->table . '
-            SET
-                id = :id,
-                author = :author';
+            $query = 'INSERT INTO ' . $this->table . ' (author) 
+                      VALUES (:author)';
         
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
@@ -31,19 +28,21 @@
             $this->id = htmlspecialchars(strip_tags($this->id));
         
             // Bind data
-            $stmt-> bindParam(':author', $this->author);
-            $stmt-> bindParam(':id', $this->id);
+            $stmt->bindParam(':author', $this->author, PDO::PARAM_STR);
 
-            // Execute query
-            if($stmt->execute()) 
+            if ($stmt->execute()) 
             {
-                return true;
+                $this->id = $this->conn->lastInsertId();
+                echo json_encode([
+                    'id' => $this->id,
+                    'author' => $this->author
+                ]);
+
+                exit();
             }
-            /*
-            // Print error if something goes wrong
-            printf("Error: $s.\n", $stmt->error);
-            */
-            return false;
+        
+            echo json_encode(['message' => 'Unable to create author']);
+            exit();
         }
 
         public function delete() 

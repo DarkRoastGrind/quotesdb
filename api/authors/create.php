@@ -18,16 +18,15 @@
   // Get raw posted data
   $data = json_decode(file_get_contents("php://input"));
 
-  $author->id = $data->id;
-  $author->author = $data->author;
-
-  // Create Category
-  if($author->create()) 
+  if (!isset($data->author)) 
   {
-    echo json_encode((["message" => "author Created"]));
-  } 
-
-  else 
-  {
-    echo json_encode((["message" => "author Not Created"]));
+      echo json_encode(["message" => "Missing required fields"]);
+      exit();
   }
+  
+  $author->author = trim($data->author);
+
+    // Create author
+    $author->create();
+
+
