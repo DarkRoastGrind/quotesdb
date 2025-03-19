@@ -89,9 +89,13 @@
             $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 
             // Execute delete query
-            if ($stmt->execute()) {
+            if ($stmt->execute()) 
+            {
                 return true; // Return true if deletion is successful
-            } else {
+            } 
+            
+            else 
+            {
                 return false; // Return false if deletion fails
             }
         }
