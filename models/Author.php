@@ -153,8 +153,7 @@
             }
 
             // Create Query
-            $query = 'UPDATE ' .
-            $this->table . '
+            $query = 'UPDATE ' . $this->table . '
                 SET 
                     id = :id,
                     author = :author
@@ -165,12 +164,12 @@
             $stmt = $this->conn->prepare($query);
             
             // Clean data
-            $this->author = $this->author ? htmlspecialchars(strip_tags($this->author)) : '';
             $this->id = (int) htmlspecialchars(strip_tags($this->id));
+            $this->author = $this->author ? htmlspecialchars(strip_tags($this->author)) : '';
             
             // Bind data
-            $stmt-> bindParam(':author', $this->author);
             $stmt-> bindParam(':id', $this->id);
+            $stmt-> bindParam(':author', $this->author);
             
             // Execute query
             if ($stmt->execute()) 

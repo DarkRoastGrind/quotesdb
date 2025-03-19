@@ -12,7 +12,7 @@
   $database = new Database();
   $db = $database->connect();
 
-  // Instantiate blog post object
+  // Instantiate author object
   $author = new Author($db);
 
 // Get raw posted data
@@ -25,5 +25,15 @@ if (!isset($data->id) || !isset($data->author))
     exit();
 }
 
-// Update quote
-$author->update();
+  // Create author
+  if ($author->create()) 
+  {
+      echo json_encode(["message" => "Author Created"]);
+  } 
+
+  else 
+  {
+      echo json_encode(["message" => "Unable to create author"]);
+  }
+  
+  exit();
