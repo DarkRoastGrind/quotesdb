@@ -159,18 +159,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT')
 if ($method === 'DELETE') 
 {
     // Get raw DELETE data
-    parse_str(file_get_contents("php://input"), $_DELETE);
+    $_DELETE = json_decode(file_get_contents("php://input"), true);
 
-    // Ensure ID is passed for deletion
-    if (empty($_DELETE['id'])) 
+    if (!isset($_DELETE['id']) || empty($_DELETE['id'])) 
     {
-        // Return 'id' as null if the quote ID is missing
         echo json_encode(["id" => null, "message" => "No Quotes Found"]);
         exit();
     }
 
-    // Set Quote ID for deletion
-    $quote->id = $_DELETE['id'];
+    $quote->id = (int) $_DELETE['id'];
+    
 
     // Attempt to delete the quote
     if ($quote->delete()) 

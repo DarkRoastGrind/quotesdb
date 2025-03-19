@@ -27,7 +27,8 @@ if (empty($data->id)) {
 }
 
 // Set ID for deletion
-$quote->id = $data->id;
+$quote->id = (int) $data->id;
+
 
 // Check if the quote exists before attempting to delete
 $quoteExistsQuery = 'SELECT id FROM quotes WHERE id = :id';
@@ -35,7 +36,8 @@ $stmt = $db->prepare($quoteExistsQuery);
 $stmt->bindParam(':id', $quote->id);
 $stmt->execute();
 
-if ($stmt->rowCount() == 0) {
+if ($stmt->rowCount() == 0) 
+{
   // Quote does not exist, but return an 'id' field
   echo json_encode(["id" => $quote->id, "message" => "No Quotes Found"]);
   exit();
