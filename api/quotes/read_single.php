@@ -1,42 +1,31 @@
-public function read_single()
-{
-    // Create query
-    $query = 'SELECT
-                id,
-                quote,
-                author_id,
-                category_id
-              FROM
-                ' . $this->table . '
-              WHERE id = ?
-              LIMIT 1';
+<?php
+    // Headers
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json');
 
-    // Prepare statement
-    $stmt = $this->conn->prepare($query);
+    include_once '../../config/Database.php';
+    include_once '../../models/Quote.php';
 
-    // Bind ID
-    $stmt->bindParam(1, $this->id);
+    // Instantiate DB & connect
+    $database = new Database();
+    $db = $database->connect();
 
-    // Execute query
-    if ($stmt->execute()) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Instantiate blog category object
+    $quote = new Quote($db);
 
-        if ($row) {
-            // Set properties
-            $this->id = $row['id'];
-            $this->quote = $row['quote'];
-            $this->author_id = $row['author_id'];
-            $this->category_id = $row['category_id'];
-        } else {
-            // No quote found
-            http_response_code(404); // Not Found
-            echo json_encode(["message" => "No Quotes Found"]);
-            exit();
-        }
-    } else {
-        // Query execution failed
-        http_response_code(500); // Internal Server Error
-        echo json_encode(["message" => "Error executing query"]);
-        exit();
-    }
-}
+    // Get ID
+    $quote->id = isset($_GET['id']) ? $_GET['id'] : die();
+
+    // Get post
+    $quote->read_single();
+
+    // Create array
+    $quote_arr = array(
+        'id' =>   $quote->id,
+        'quote' => $quote->quote,
+        'author' => $quote->author_id,
+        'category' => $quote->category_id
+    );
+
+    // Make JSON
+    print_r(json_encode($quote_arr));
