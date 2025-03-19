@@ -16,45 +16,54 @@
             $this->conn = $db;
         }
 
-        public function create($data)
+        public function create() 
         {
-            if (empty($data->quote) || empty($data->author_id) || empty($data->category_id)) {
-                echo json_encode(["message" => "Missing Required Parameters"]);
-                exit();
-            }
-
-            // Check if author_id exists in authors table
+            // Check if author_id exists in the authors table
             $authorQuery = 'SELECT id FROM authors WHERE id = :author_id';
             $authorStmt = $this->conn->prepare($authorQuery);
-            $authorStmt->bindParam(':author_id', $data->author_id);
+            $authorStmt->bindParam(':author_id', $this->author_id);
             $authorStmt->execute();
+        
             if ($authorStmt->rowCount() == 0) {
                 echo json_encode(['message' => 'author_id Not Found']);
                 exit();
             }
         
-            // Check if category_id exists in categories table
+            // Check if category_id exists in the categories table
             $categoryQuery = 'SELECT id FROM categories WHERE id = :category_id';
             $categoryStmt = $this->conn->prepare($categoryQuery);
-            $categoryStmt->bindParam(':category_id', $data->category_id);
+            $categoryStmt->bindParam(':category_id', $this->category_id);
             $categoryStmt->execute();
+        
             if ($categoryStmt->rowCount() == 0) {
                 echo json_encode(['message' => 'category_id Not Found']);
                 exit();
             }
         
-            // Proceed with the insert if checks pass
-            $query = 'INSERT INTO quotes (quote, author_id, category_id) VALUES (:quote, :author_id, :category_id)';
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':quote', $data->quote);
-            $stmt->bindParam(':author_id', $data->author_id);
-            $stmt->bindParam(':category_id', $data->category_id);
+            // Create Query
+            $query = 'INSERT INTO ' . $this->table . ' (quote, author_id, category_id) 
+                      VALUES (:quote, :author_id, :category_id)';
         
-            if ($stmt->execute()) {
-                echo json_encode(["message" => "Quote created"]);
-            } else {
-                echo json_encode(["message" => "Error creating quote"]);
+            $stmt = $this->conn->prepare($query);
+            
+            $stmt->bindParam(':quote', $this->quote, PDO::PARAM_STR);
+            $stmt->bindParam(':author_id', $this->author_id, PDO::PARAM_INT);
+            $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
+        
+            if ($stmt->execute()) 
+            {
+                $this->id = $this->conn->lastInsertId();
+                echo json_encode([
+                    'id' => $this->id,
+                    'quote' => $this->quote,
+                    'author_id' => $this->author_id,
+                    'category_id' => $this->category_id
+                ]);
+                exit();
             }
+        
+            echo json_encode(['message' => 'Unable to create quote']);
+            exit();
         }
         
 
@@ -116,7 +125,7 @@
                     $this->author_id = $row['author_id'];
                     $this->category_id = $row['category_id'];
                 } 
-
+                
                 else 
                 {
                     echo json_encode(['message' => 'No Quotes Found']);
@@ -135,72 +144,68 @@
         // Read function
         public function read() 
         {
-            $query = 'SELECT id, quote, author_id, category_id FROM ' . $this->table . ' ORDER BY id';
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            
-            $num = $stmt->rowCount();
-            
-            if ($num > 0) {
-                $quotes_arr = array();
-                $quotes_arr['quotes'] = array();
-                
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    extract($row);
-                    $quote_item = array(
-                        'id' => $id,
-                        'quote' => $quote,
-                        'author_id' => $author_id,
-                        'category_id' => $category_id
-                    );
-                    array_push($quotes_arr['quotes'], $quote_item);
-                }
-                echo json_encode($quotes_arr);
-            } else {
-                echo json_encode(['message' => 'No Quotes Found']);
-            }
+          // Create query
+          $query = 'SELECT 
+                        id,
+                        quote,
+                        author_id,
+                        category_id
+                    FROM 
+                    ' . $this->table . '
+                    ORDER BY
+                        id';
+          
+          // Prepare statement
+          $stmt = $this->conn->prepare($query);
+    
+          // Execute query
+          $stmt->execute();
+    
+          return $stmt;
         }
 
-        public function update($data)
+        public function update() 
         {
-            if (empty($data->quote) || empty($data->author_id) || empty($data->category_id)) {
-                echo json_encode(["message" => "Missing Required Parameters"]);
+            try 
+            {
+                // Create Query
+                $query = 'UPDATE ' . $this->table . '
+                          SET quote = :quote,
+                              author_id = :author_id,
+                              category_id = :category_id
+                          WHERE id = :id';
+        
+                // Prepare Statement
+                $stmt = $this->conn->prepare($query);
+        
+                // Clean data
+                $this->quote = htmlspecialchars(strip_tags($this->quote));
+                $this->id = htmlspecialchars(strip_tags($this->id));
+                $this->author_id = htmlspecialchars(strip_tags($this->author_id));
+                $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+        
+                // Bind data
+                $stmt->bindParam(':quote', $this->quote);
+                $stmt->bindParam(':id', $this->id);
+                $stmt->bindParam(':author_id', $this->author_id);
+                $stmt->bindParam(':category_id', $this->category_id);
+        
+                // Execute query
+                if ($stmt->execute()) 
+                {
+                    return true;
+                }
+        
+                return false;
+            } 
+
+            catch (PDOException $e) 
+            {
+                echo json_encode(["message" => "Error: " . $e->getMessage()]);
                 exit();
             }
-            
-            // Check if author_id exists in authors table
-            $authorQuery = 'SELECT id FROM authors WHERE id = :author_id';
-            $authorStmt = $this->conn->prepare($authorQuery);
-            $authorStmt->bindParam(':author_id', $data->author_id);
-            $authorStmt->execute();
-            if ($authorStmt->rowCount() == 0) {
-                echo json_encode(['message' => 'author_id Not Found']);
-                exit();
-            }
+        }
         
-            // Check if category_id exists in categories table
-            $categoryQuery = 'SELECT id FROM categories WHERE id = :category_id';
-            $categoryStmt = $this->conn->prepare($categoryQuery);
-            $categoryStmt->bindParam(':category_id', $data->category_id);
-            $categoryStmt->execute();
-            if ($categoryStmt->rowCount() == 0) {
-                echo json_encode(['message' => 'category_id Not Found']);
-                exit();
-            }
         
-            // Proceed with the update if checks pass
-            $query = 'UPDATE quotes SET quote = :quote, author_id = :author_id, category_id = :category_id WHERE id = :id';
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':quote', $data->quote);
-            $stmt->bindParam(':author_id', $data->author_id);
-            $stmt->bindParam(':category_id', $data->category_id);
-            $stmt->bindParam(':id', $data->id);
-        
-            if ($stmt->execute()) {
-                echo json_encode(["message" => "Quote updated"]);
-            } else {
-                echo json_encode(["message" => "Error updating quote"]);
-            }
-        } 
 
     }

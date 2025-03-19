@@ -27,5 +27,5 @@
   $quote->category_id = (int) $data->category_id;
 
     // Create quote
-    $quote->create($data);
+    $quote->create();
 

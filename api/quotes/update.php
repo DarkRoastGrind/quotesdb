@@ -68,7 +68,7 @@ if ($stmt->rowCount() == 0)
 }
 
 // Attempt to update the quote
-if ($quote->update($data)) 
+if ($quote->update()) 
 {
     echo json_encode([
         "id" => $quote->id,

@@ -110,7 +110,7 @@ if ($method === 'POST')
     $quote->category_id = $data->category_id;
 
     // Attempt to create the quote
-    if ($quote->create($data)) 
+    if ($quote->create()) 
     {
         echo json_encode([
             'id' => $quote->id,
@@ -129,45 +129,44 @@ if ($method === 'POST')
 
 
 // Handle PUT requests (Update an existing Quote)
-// Handle PUT requests (Update an existing Quote)
 if ($method === 'PUT') 
 {
     // Get raw PUT data
     $data = json_decode(file_get_contents("php://input"));
 
-    // Validate the input data
-    if (empty($data->id) || !is_numeric($data->id)) 
+    // Ensure required parameters are present
+    if (empty($_PUT['id'])) 
     {
-        echo json_encode(["message" => "Invalid or missing quote ID"]);
+        echo json_encode(["message" => "quote ID Not Found"]);
         exit();
     }
 
-    if (empty($data->quote)) 
+    if (empty($_PUT['quote'])) 
     {
         echo json_encode(["message" => "quote Not Found"]);
         exit();
     }
 
-    if (empty($data->author_id) || !is_numeric($data->author_id)) 
+    if (empty($_PUT['author_id'])) 
     {
-        echo json_encode(["message" => "Invalid or missing author ID"]);
+        echo json_encode(["message" => "author_id Not Found"]);
         exit();
     }
 
-    if (empty($data->category_id) || !is_numeric($data->category_id)) 
+    if (empty($_PUT['category_id'])) 
     {
-        echo json_encode(["message" => "Invalid or missing category ID"]);
+        echo json_encode(["message" => "category_id Not Found"]);
         exit();
     }
 
     // Set updated Quote data
-    $quote->id = $data->id;
-    $quote->quote = $data->quote;
-    $quote->author_id = $data->author_id;
-    $quote->category_id = $data->category_id;
+    $quote->id = $_PUT['id'];
+    $quote->quote = $_PUT['quote'];
+    $quote->author_id = $_PUT['author_id'];
+    $quote->category_id = $_PUT['category_id'];
 
     // Attempt to update the quote
-    if ($quote->update($data)) 
+    if ($quote->update()) 
     {
         echo json_encode([
             'id' => $quote->id,
@@ -206,12 +205,10 @@ if ($method === 'DELETE')
     {
         echo json_encode(['id' => $quote->id]);
     } 
-    
     else 
     {
         echo json_encode(["message" => "No Quotes Found"]);
     }
-
     exit();
 }
 
