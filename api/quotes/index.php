@@ -129,15 +129,16 @@ if ($method === 'POST')
 
 
 // Handle PUT requests (Update an existing Quote)
+// Handle PUT requests (Update an existing Quote)
 if ($method === 'PUT') 
 {
     // Get raw PUT data
     $data = json_decode(file_get_contents("php://input"));
 
-    // Ensure required parameters are present
-    if (empty($data->id)) 
+    // Validate the input data
+    if (empty($data->id) || !is_numeric($data->id)) 
     {
-        echo json_encode(["message" => "quote ID Not Found"]);
+        echo json_encode(["message" => "Invalid or missing quote ID"]);
         exit();
     }
 
@@ -147,15 +148,15 @@ if ($method === 'PUT')
         exit();
     }
 
-    if (empty($data->author_id)) 
+    if (empty($data->author_id) || !is_numeric($data->author_id)) 
     {
-        echo json_encode(["message" => "author_id Not Found"]);
+        echo json_encode(["message" => "Invalid or missing author ID"]);
         exit();
     }
 
-    if (empty($data->category_id)) 
+    if (empty($data->category_id) || !is_numeric($data->category_id)) 
     {
-        echo json_encode(["message" => "category_id Not Found"]);
+        echo json_encode(["message" => "Invalid or missing category ID"]);
         exit();
     }
 
@@ -164,7 +165,6 @@ if ($method === 'PUT')
     $quote->quote = $data->quote;
     $quote->author_id = $data->author_id;
     $quote->category_id = $data->category_id;
-    $quote->category_id = $_PUT['category_id'];
 
     // Attempt to update the quote
     if ($quote->update()) 
