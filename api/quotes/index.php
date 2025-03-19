@@ -110,7 +110,7 @@ if ($method === 'POST')
     $quote->category_id = $data->category_id;
 
     // Attempt to create the quote
-    if ($quote->create()) 
+    if ($quote->create($data)) 
     {
         echo json_encode([
             'id' => $quote->id,
@@ -167,7 +167,7 @@ if ($method === 'PUT')
     $quote->category_id = $data->category_id;
 
     // Attempt to update the quote
-    if ($quote->update()) 
+    if ($quote->update($data)) 
     {
         echo json_encode([
             'id' => $quote->id,

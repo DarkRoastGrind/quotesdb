@@ -16,7 +16,8 @@
   // Get raw posted data
   $data = json_decode(file_get_contents("php://input"));
 
-  if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
+  if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) 
+  {
       echo json_encode(["message" => "Missing required fields"]);
       exit();
   }
@@ -26,5 +27,5 @@
   $quote->category_id = (int) $data->category_id;
 
     // Create quote
-    $quote->create();
+    $quote->create($data);
 
