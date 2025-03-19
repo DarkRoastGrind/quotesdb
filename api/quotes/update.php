@@ -24,7 +24,8 @@ $quote = new Quote($db);
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if JSON data is valid
-if (!$data) {
+if (!$data) 
+{
     http_response_code(400); // Bad Request
     echo json_encode(["message" => "Invalid JSON data"]);
     exit();
@@ -59,7 +60,12 @@ if ($stmt->rowCount() == 0) {
 $query = "SELECT id FROM authors WHERE id = :author_id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':author_id', $quote->author_id);
-$stmt->execute();
+
+if (!$stmt->execute()) {
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["message" => "Error checking author_id"]);
+    exit();
+}
 
 if ($stmt->rowCount() == 0) {
     http_response_code(404); // Not Found
@@ -71,7 +77,12 @@ if ($stmt->rowCount() == 0) {
 $query = "SELECT id FROM categories WHERE id = :category_id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':category_id', $quote->category_id);
-$stmt->execute();
+
+if (!$stmt->execute()) {
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["message" => "Error checking category_id"]);
+    exit();
+}
 
 if ($stmt->rowCount() == 0) {
     http_response_code(404); // Not Found
