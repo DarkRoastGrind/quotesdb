@@ -164,7 +164,7 @@ if ($method === 'DELETE')
     // Ensure ID is passed for deletion
     if (empty($_DELETE['id'])) 
     {
-        echo json_encode(["message" => "quote ID Not Found"]);
+        echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
@@ -172,16 +172,7 @@ if ($method === 'DELETE')
     $quote->id = $_DELETE['id'];
 
     // Attempt to delete the quote
-    if ($quote->delete()) 
-    {
-        echo json_encode(['id' => $quote->id]);
-    } 
-
-    else 
-    {
-        echo json_encode(["message" => "No Quotes Found"]);
-    }
-    
+    $quote->delete();
     exit();
 }
 
