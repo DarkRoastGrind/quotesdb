@@ -129,9 +129,8 @@ if ($method === 'POST')
     exit();
 }
 
-
 // Handle PUT requests (Update an existing Quote)
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') 
+if ($method === 'PUT') 
 {
     // Get raw PUT data
     $data = json_decode(file_get_contents("php://input"));
@@ -153,7 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT')
     $quote->update();
     exit();
 }
-
 
 // Handle DELETE requests (Delete a Quote)
 if ($method === 'DELETE') 
@@ -177,6 +175,7 @@ if ($method === 'DELETE')
         echo json_encode(['id' => $quote->id]);
         exit();
     } 
+
     else 
     {
         // Include the 'id' field even in case of failure

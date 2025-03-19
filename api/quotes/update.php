@@ -19,7 +19,8 @@ $quote = new Quote($db);
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if all required parameters are provided
-if (!isset($data->id) || !isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
+if (!isset($data->id) || !isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) 
+{
     echo json_encode(["message" => "Missing Required Parameters"]);
     exit();
 }
@@ -36,7 +37,8 @@ $stmt = $db->prepare($query);
 $stmt->bindParam(':id', $quote->id);
 $stmt->execute();
 
-if ($stmt->rowCount() == 0) {
+if ($stmt->rowCount() == 0) 
+{
     echo json_encode(["message" => "No Quotes Found"]);
     exit();
 }
@@ -47,7 +49,8 @@ $stmt = $db->prepare($query);
 $stmt->bindParam(':author_id', $quote->author_id);
 $stmt->execute();
 
-if ($stmt->rowCount() == 0) {
+if ($stmt->rowCount() == 0) 
+{
     echo json_encode(["message" => "author_id Not Found"]);
     exit();
 }
@@ -58,20 +61,25 @@ $stmt = $db->prepare($query);
 $stmt->bindParam(':category_id', $quote->category_id);
 $stmt->execute();
 
-if ($stmt->rowCount() == 0) {
+if ($stmt->rowCount() == 0) 
+{
     echo json_encode(["message" => "category_id Not Found"]);
     exit();
 }
 
 // Attempt to update the quote
-if ($quote->update()) {
+if ($quote->update()) 
+{
     echo json_encode([
         "id" => $quote->id,
         "quote" => $quote->quote,
         "author_id" => $quote->author_id,
         "category_id" => $quote->category_id
     ]);
-} else {
+} 
+
+else 
+{
     echo json_encode(["message" => "Quote Not Updated"]);
 }
 
