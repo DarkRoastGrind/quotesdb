@@ -102,10 +102,10 @@
                         quote,
                         author_id,
                         category_id
-                    FROM
+                      FROM
                         ' . $this->table . '
-                        WHERE id = ?
-                        LIMIT 1';
+                      WHERE id = ?
+                      LIMIT 1';
         
             // Prepare statement
             $stmt = $this->conn->prepare($query);
@@ -114,8 +114,7 @@
             $stmt->bindParam(1, $this->id);
         
             // Execute query
-            if ($stmt->execute()) 
-            {
+            if ($stmt->execute()) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
                 if ($row) {
@@ -124,18 +123,16 @@
                     $this->quote = $row['quote'];
                     $this->author_id = $row['author_id'];
                     $this->category_id = $row['category_id'];
-                } 
-                
-                else 
-                {
-                    echo json_encode(['message' => 'No Quotes Found']);
+                } else {
+                    // No quote found
+                    http_response_code(404); // Not Found
+                    echo json_encode(["message" => "No Quotes Found"]);
                     exit();
                 }
-            } 
-            
-            else 
-            {
-                echo json_encode(['message' => 'Error executing query']);
+            } else {
+                // Query execution failed
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["message" => "Error executing query"]);
                 exit();
             }
         }

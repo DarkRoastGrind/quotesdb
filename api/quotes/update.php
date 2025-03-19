@@ -1,10 +1,15 @@
 <?php
+// Disable error reporting to prevent HTML errors from being output
+ini_set('display_errors', 0);
+error_reporting(0);
+
 // Headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
+// Include necessary files
 include_once '../../config/Database.php';
 include_once '../../models/Quote.php';
 
@@ -17,6 +22,13 @@ $quote = new Quote($db);
 
 // Get raw posted data
 $data = json_decode(file_get_contents("php://input"));
+
+// Check if JSON data is valid
+if (!$data) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["message" => "Invalid JSON data"]);
+    exit();
+}
 
 // Check if all required parameters are provided
 if (!isset($data->id) || !isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
