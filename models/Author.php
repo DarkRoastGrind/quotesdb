@@ -15,6 +15,12 @@
 
         public function create() 
         {
+            if (empty($this->author)) 
+            {
+                echo json_encode(["message" => "Author cannot be empty"]);
+                return false;
+            }
+
             // Create Query
             $query = 'INSERT INTO ' . $this->table . ' (author) 
                       VALUES (:author)';
