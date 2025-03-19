@@ -131,12 +131,14 @@ if ($method === 'POST')
 
 
 // Handle PUT requests (Update an existing Quote)
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') 
+{
     // Get raw PUT data
     $data = json_decode(file_get_contents("php://input"));
 
     // Ensure required parameters are present
-    if (empty($data->id) || empty($data->quote) || empty($data->author_id) || empty($data->category_id)) {
+    if (empty($data->id) || empty($data->quote) || empty($data->author_id) || empty($data->category_id)) 
+    {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
@@ -174,10 +176,12 @@ if ($method === 'DELETE')
     {
         echo json_encode(['id' => $quote->id]);
     } 
+
     else 
     {
         echo json_encode(["message" => "No Quotes Found"]);
     }
+    
     exit();
 }
 

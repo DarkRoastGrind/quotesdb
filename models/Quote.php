@@ -70,28 +70,40 @@
 
         public function delete() 
         {
+            // Check if the quote exists
+            $quoteQuery = 'SELECT id FROM ' . $this->table . ' WHERE id = :id';
+            $quoteStmt = $this->conn->prepare($quoteQuery);
+            $quoteStmt->bindParam(':id', $this->id);
+            $quoteStmt->execute();
+        
+            if ($quoteStmt->rowCount() == 0) {
+                // Quote does not exist
+                echo json_encode(['message' => 'No Quotes Found']);
+                exit();
+            }
+        
             // Create query
             $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
         
             // Prepare Statement
             $stmt = $this->conn->prepare($query);
         
-            // clean data
+            // Clean data
             $this->id = htmlspecialchars(strip_tags($this->id));
         
             // Bind Data
-            $stmt-> bindParam(':id', $this->id);
+            $stmt->bindParam(':id', $this->id);
         
             // Execute query
-            if($stmt->execute()) 
-            {
-              return true;
+            if ($stmt->execute()) {
+                // Quote deleted successfully
+                echo json_encode(['id' => $this->id]);
+                exit();
+            } else {
+                // Failed to delete quote
+                echo json_encode(['message' => 'Quote Not Deleted']);
+                exit();
             }
-            /*
-            // Print error if something goes wrong
-            printf("Error: $s.\n", $stmt->error);
-            */
-            return false;
         }
 
         public function read_single()

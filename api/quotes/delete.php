@@ -1,36 +1,35 @@
 <?php
-  // Headers
-  header('Access-Control-Allow-Origin: *');
-  header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: DELETE');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
+// Headers
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: DELETE');
+header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-  include_once '../../config/Database.php';
-  include_once '../../models/Quote.php';
-  // Instantiate DB & connect
-  $database = new Database();
-  $db = $database->connect();
+// Include necessary files
+include_once '../../config/Database.php';
+include_once '../../models/Quote.php';
 
-  // Instantiate blog post object
-  $quote = new Quote($db);
+// Instantiate DB & connect
+$database = new Database();
+$db = $database->connect();
 
-  // Get raw posted data
-  $data = json_decode(file_get_contents("php://input"));
+// Instantiate Quote object
+$quote = new Quote($db);
 
-  // Set ID to UPDATE
-  $quote->id = $data->id;
+// Get raw posted data
+$data = json_decode(file_get_contents("php://input"));
 
-  // Delete post
-  if($quote->delete()) 
-  {
-    echo json_encode(
-      array('message' => 'quote deleted')
-    );
-  } 
+// Check if ID is provided
+if (empty($data->id)) 
+{
+    http_response_code(400); // Bad Request
+    echo json_encode(["message" => "Missing Required Parameters"]);
+    exit();
+}
 
-  else 
-  {
-    echo json_encode(
-      array('message' => 'quote not deleted')
-    );
-  }
+// Set ID for deletion
+$quote->id = $data->id;
+
+// Attempt to delete the quote
+$quote->delete();
+exit();
