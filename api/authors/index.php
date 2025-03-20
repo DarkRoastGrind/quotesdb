@@ -54,7 +54,7 @@ if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!isset($data->author) || empty(trim($data->author))) {
-        echo json_encode(["message" => "Missing or empty 'author' field"]);
+        echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
