@@ -21,7 +21,11 @@ if (!isset($data->id) || !isset($data->author)) {
     exit();
 }
 
-// Update author
+// Assign data to author object
+$author->id = $data->id;
+$author->author = $data->author;
+
+// Attempt to update author
 if ($author->update()) {
     echo json_encode([
         "id" => $author->id,
