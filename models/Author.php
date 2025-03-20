@@ -23,7 +23,8 @@ class Author {
         // Create query
         $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        $stmt-> bindParam(':id', $this->id);
 
         return $stmt->execute();
     }
