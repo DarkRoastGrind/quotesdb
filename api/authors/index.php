@@ -92,6 +92,7 @@ if ($method === 'PUT') {
 if ($method === 'DELETE') {
     $data = json_decode(file_get_contents("php://input"));
 
+    // Check if id exists in the DELETE request body
     if (!isset($data->id) || empty($data->id)) {
         echo json_encode(["id" => null, "message" => "No 'id' provided or 'id' is empty"]);
         exit();
@@ -101,9 +102,15 @@ if ($method === 'DELETE') {
 
     // Attempt to delete the author
     if ($author->delete()) {
-        echo json_encode(["id" => $author->id, "message" => "Author deleted successfully"]);
+        echo json_encode([
+            "id" => $author->id,
+            "message" => "Author deleted successfully"
+        ]);
     } else {
-        echo json_encode(["id" => $author->id, "message" => "Unable to delete author"]);
+        echo json_encode([
+            "id" => $author->id,
+            "message" => "Unable to delete author"
+        ]);
     }
     exit();
 }
