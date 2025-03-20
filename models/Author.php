@@ -56,5 +56,24 @@ class Author {
 
         return $stmt->execute();
     }
+
+    public function exists() {
+        // Create query to check if the author exists by id
+        $query = 'SELECT id FROM ' . $this->table . ' WHERE id = :id LIMIT 1';
+    
+        // Prepare statement
+        $stmt = $this->conn->prepare($query);
+    
+        // Bind id to the query
+        $stmt->bindParam(':id', $this->id);
+    
+        // Execute query
+        $stmt->execute();
+    
+        // Return true if the author exists, false otherwise
+        return $stmt->rowCount() > 0;
+    }
+
+
 }
 ?>

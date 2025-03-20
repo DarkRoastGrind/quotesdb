@@ -89,20 +89,40 @@ if ($method === 'PUT') {
 }
 
 // Handle DELETE request (Delete an author)
+// Handle DELETE request (Delete an author)
 if ($method === 'DELETE') {
+    // Get raw DELETE data
     $data = json_decode(file_get_contents("php://input"));
 
+    // Check if id exists in the DELETE request body
     if (!isset($data->id) || empty($data->id)) {
-        echo json_encode(["message" => "No 'id' provided or 'id' is empty"]);
+        echo json_encode(["id" => null, "message" => "No 'id' provided or 'id' is empty"]);
         exit();
     }
 
+    // Set the id in the Author object
     $author->id = (int) $data->id;
 
+    // Check if the author exists before deleting
+    if (!$author->exists()) {
+        echo json_encode([
+            "id" => $author->id,
+            "message" => "Author not found"
+        ]);
+        exit();
+    }
+
+    // Attempt to delete the author
     if ($author->delete()) {
-        echo json_encode(["id" => $author->id, "message" => "Author deleted successfully"]);
+        echo json_encode([
+            "id" => $author->id,
+            "message" => "Author deleted successfully"
+        ]);
     } else {
-        echo json_encode(["message" => "Unable to delete author"]);
+        echo json_encode([
+            "id" => $author->id,
+            "message" => "Unable to delete author"
+        ]);
     }
     exit();
 }
