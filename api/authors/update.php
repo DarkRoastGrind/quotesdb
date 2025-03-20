@@ -1,42 +1,39 @@
 <?php
-  // Headers
-  header('Access-Control-Allow-Origin: *');
-  header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: PUT');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
+    // Include headers
+    require_once '../../config/headers.php';
 
-  include_once '../../config/Database.php';
-  include_once '../../models/Author.php';
+    include_once '../../config/Database.php';
+    include_once '../../models/Author.php';
 
-  // Instantiate DB & connect
-  $database = new Database();
-  $db = $database->connect();
+    // Instantiate DB & connect
+    $database = new Database();
+    $db = $database->connect();
 
-  // Instantiate author object
-  $author = new Author($db);
+    // Instantiate author object
+    $author = new Author($db);
 
-// Get raw posted data
-$data = json_decode(file_get_contents("php://input"));
+    // Get raw posted data
+    $data = json_decode(file_get_contents("php://input"));
 
-// Check if all required parameters are provided
-if (!isset($data->id) || !isset($data->author)) 
-{
-    echo json_encode(["message" => "Missing Required Parameters"]);
+    // Check if all required parameters are provided
+    if (!isset($data->id) || !isset($data->author)) 
+    {
+        echo json_encode(["message" => "Missing Required Parameters"]);
+        exit();
+    }
+
+    // Update author
+    if ($author->update()) 
+    {
+        echo json_encode([
+            "id" => $author->id,
+            "author" => $author->author
+        ]);
+    } 
+
+    else 
+    {
+        echo json_encode(["message" => "Unable to update author"]);
+    }
+
     exit();
-}
-
-  // Update author
-  if ($author->update()) 
-  {
-      echo json_encode([
-          "id" => $author->id,
-          "author" => $author->author
-      ]);
-  } 
-
-  else 
-  {
-      echo json_encode(["message" => "Unable to update author"]);
-  }
-
-  exit();

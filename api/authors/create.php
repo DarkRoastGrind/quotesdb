@@ -1,42 +1,44 @@
 <?php
-  // Headers
-  header('Access-Control-Allow-Origin: *');
-  header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: POST');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
+    // Include headers
+    require_once '../../config/headers.php';
 
-  include_once '../../config/Database.php';
-  include_once '../../models/Author.php';
-  
-  // Instantiate DB & connect
-  $database = new Database();
-  $db = $database->connect();
+    // Include necessary files.
+    include_once '../../config/Database.php';
+    include_once '../../models/Author.php';
+    
+    // Instantiate DB & connect
+    $database = new Database();
+    $db = $database->connect();
 
-  // Instantiate blog post object
-  $author = new Author($db);
+    // Instantiate blog post object
+    $author = new Author($db);
 
-  // Get raw posted data
-  $data = json_decode(file_get_contents("php://input"));
+    // Get raw posted data
+    $data = json_decode(file_get_contents("php://input"),true);
 
-  if (!isset($data->author)|| empty(trim($data->author)))
-  {
-      echo json_encode(["message" => "Missing required fields"]);
-      exit();
-  }
+    // Validate input
+    if (!isset($data['author']) || empty(trim($data['author']))) 
+    {
+        echo json_encode(["status" => "error", "message" => "Missing required fields"]);
+        exit();
+    }
 
-  $author->author = trim($data->author);
-  
-  // Create author
-  if ($author->create()) 
-  {
-      echo json_encode(["message" => "Author Created"]);
-  } 
+    $author->author = trim($data->author);
+    
+    // Set author data
+    $author->author = trim($data['author']);
 
-  else 
-  {
-      echo json_encode(["message" => "Unable to create author"]);
-  }
-  
-  exit();
+    // Create author
+    if ($author->create()) 
+    {
+        echo json_encode(["status" => "success", "message" => "Author Created", "id" => $author->id]);
+    } 
+    
+    else 
+    {
+        echo json_encode(["status" => "error", "message" => "Unable to create author"]);
+    }
+
+    exit();
 
 

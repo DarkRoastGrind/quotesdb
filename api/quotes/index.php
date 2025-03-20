@@ -1,7 +1,6 @@
 <?php
-// Enable CORS and set response type
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
+    // Include headers
+    require_once '../../config/headers.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
