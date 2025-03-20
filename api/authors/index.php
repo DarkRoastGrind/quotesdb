@@ -90,22 +90,21 @@ if ($method === 'PUT') {
 
 // Handle DELETE request (Delete an author)
 if ($method === 'DELETE') {
-    $data = json_decode(file_get_contents("php://input"),true);
+    $data = json_decode(file_get_contents("php://input"));
 
     if (!isset($data->id) || empty($data->id)) {
-        echo json_encode(["id" => null, "message" => "No authors Found"]);
+        echo json_encode(["id" => null, "message" => "No 'id' provided or 'id' is empty"]);
         exit();
     }
 
-    $author->id = (int) $data['id'];
+    $author->id = (int) $data->id;
 
     // Attempt to delete the author
     if ($author->delete()) {
         echo json_encode(["id" => $author->id, "message" => "Author deleted successfully"]);
-        exit();
     } else {
         echo json_encode(["id" => $author->id, "message" => "Unable to delete author"]);
-        exit();
     }
+    exit();
 }
 ?>
