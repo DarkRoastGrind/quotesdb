@@ -1,44 +1,36 @@
 <?php
-    // Include headers
-    include_once '../../config/headers.php';
+// Include headers
+require_once '../../config/headers.php';
 
-    // Include necessary files.
-    include_once '../../config/Database.php';
-    include_once '../../models/Author.php';
-    
-    // Instantiate DB & connect
-    $database = new Database();
-    $db = $database->connect();
+// Include necessary files.
+include_once '../../config/Database.php';
+include_once '../../models/Author.php';
 
-    // Instantiate blog post object
-    $author = new Author($db);
+// Instantiate DB & connect
+$database = new Database();
+$db = $database->connect();
 
-    // Get raw posted data
-    $data = json_decode(file_get_contents("php://input"),true);
+// Instantiate blog post object
+$author = new Author($db);
 
-    // Validate input
-    if (!isset($data['author']) || empty(trim($data['author']))) 
-    {
-        echo json_encode(["status" => "error", "message" => "Missing required fields"]);
-        exit();
-    }
+// Get raw posted data
+$data = json_decode(file_get_contents("php://input"));
 
-    $author->author = trim($data->author);
-    
-    // Set author data
-    $author->author = trim($data['author']);
-
-    // Create author
-    if ($author->create()) 
-    {
-        echo json_encode(["status" => "success", "message" => "Author Created", "id" => $author->id]);
-    } 
-    
-    else 
-    {
-        echo json_encode(["status" => "error", "message" => "Unable to create author"]);
-    }
-
+// Validate input
+if (!isset($data->author) || empty(trim($data->author))) {
+    echo json_encode(["message" => "Missing required fields"]);
     exit();
+}
+
+$author->author = trim($data->author);
+
+// Create author
+if ($author->create()) {
+    echo json_encode(["message" => "Author Created"]);
+} else {
+    echo json_encode(["message" => "Unable to create author"]);
+}
+
+exit();
 
 
