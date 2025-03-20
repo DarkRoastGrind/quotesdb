@@ -88,42 +88,30 @@ if ($method === 'PUT') {
     exit();
 }
 
-// Handle DELETE request (Delete an author)
-// Handle DELETE request (Delete an author)
+// Handle DELETE requests (Delete an author)
 if ($method === 'DELETE') {
     // Get raw DELETE data
-    $data = json_decode(file_get_contents("php://input"));
+    $_DELETE = json_decode(file_get_contents("php://input"), true);
 
-    // Check if id exists in the DELETE request body
-    if (!isset($data->id) || empty($data->id)) {
-        echo json_encode(["id" => null, "message" => "No 'id' provided or 'id' is empty"]);
+    // Check if id is provided
+    if (!isset($_DELETE['id']) || empty($_DELETE['id'])) {
+        echo json_encode(["id" => null, "message" => "No authors Found"]);
         exit();
     }
 
     // Set the id in the Author object
-    $author->id = (int) $data->id;
+    $author->id = (int) $_DELETE['id'];
 
-    // Check if the author exists before deleting
-    if (!$author->exists()) {
-        echo json_encode([
-            "id" => $author->id,
-            "message" => "Author not found"
-        ]);
+    // Attempt to delete the author using the delete method from the model
+    if ($author->delete()) {
+        // Return the id field on success
+        echo json_encode(['id' => $author->id]);
+        exit();
+    } else {
+        // Include the 'id' field even in case of failure
+        echo json_encode(['id' => $author->id, 'message' => 'Author Not Deleted']);
         exit();
     }
-
-    // Attempt to delete the author
-    if ($author->delete()) {
-        echo json_encode([
-            "id" => $author->id,
-            "message" => "Author deleted successfully"
-        ]);
-    } else {
-        echo json_encode([
-            "id" => $author->id,
-            "message" => "Unable to delete author"
-        ]);
-    }
-    exit();
 }
+
 ?>

@@ -19,15 +19,24 @@ class Author {
         return $stmt->execute();
     }
 
-    public function delete() {
-        // Create query
+    public function delete() 
+    {
+        // Create query to delete author by ID
         $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
+        // Prepare the statement
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-
-        return $stmt->execute();
+        // Clean the data
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        // Bind the ID parameter
+        $stmt->bindParam(':id', $this->id);
+        // Execute the query
+        if ($stmt->execute()) {
+            return true;  // Return true if deletion was successful
+        }
+        // If deletion failed (e.g., no matching row found), return false
+        return false;
     }
-
+    
     public function read_single() {
         // Create query
         $query = 'SELECT id, author FROM ' . $this->table . ' WHERE id = ? LIMIT 1';
@@ -56,24 +65,6 @@ class Author {
 
         return $stmt->execute();
     }
-
-    public function exists() {
-        // Create query to check if the author exists by id
-        $query = 'SELECT id FROM ' . $this->table . ' WHERE id = :id LIMIT 1';
-    
-        // Prepare statement
-        $stmt = $this->conn->prepare($query);
-    
-        // Bind id to the query
-        $stmt->bindParam(':id', $this->id);
-    
-        // Execute query
-        $stmt->execute();
-    
-        // Return true if the author exists, false otherwise
-        return $stmt->rowCount() > 0;
-    }
-
 
 }
 ?>
