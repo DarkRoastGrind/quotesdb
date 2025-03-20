@@ -54,7 +54,7 @@ if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!isset($data->author) || empty(trim($data->author))) {
-        echo json_encode(["message" => "Missing or empty 'author' field"]);
+        echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
@@ -93,16 +93,17 @@ if ($method === 'DELETE') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!isset($data->id) || empty($data->id)) {
-        echo json_encode(["message" => "No 'id' provided or 'id' is empty"]);
+        echo json_encode(["id" => null, "message" => "No 'id' provided or 'id' is empty"]);
         exit();
     }
 
     $author->id = (int) $data->id;
 
+    // Attempt to delete the author
     if ($author->delete()) {
         echo json_encode(["id" => $author->id, "message" => "Author deleted successfully"]);
     } else {
-        echo json_encode(["message" => "Unable to delete author"]);
+        echo json_encode(["id" => $author->id, "message" => "Unable to delete author"]);
     }
     exit();
 }
