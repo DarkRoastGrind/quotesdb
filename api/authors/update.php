@@ -1,6 +1,6 @@
 <?php
     // Include headers
-    require_once '../../config/headers.php';
+    include_once '../../config/headers.php';
 
     include_once '../../config/Database.php';
     include_once '../../models/Author.php';
