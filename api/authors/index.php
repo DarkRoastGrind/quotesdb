@@ -1,26 +1,21 @@
 <?php
-// Include headers and models
 include_once '../../config/headers.php';
 include_once '../../config/Database.php';
 include_once '../../models/Author.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Handle OPTIONS request (CORS preflight)
 if ($method === 'OPTIONS') {
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
     header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
     exit();
 }
 
-// Instantiate DB & connect
 $database = new Database();
 $db = $database->connect();
 
-// Instantiate Author model
 $author = new Author($db);
 
-// Handle GET request (Fetch authors)
 if ($method === 'GET') {
     if (isset($_GET['id'])) {
         $author->id = $_GET['id'];
@@ -49,7 +44,6 @@ if ($method === 'GET') {
     exit();
 }
 
-// Handle POST request (Create a new author)
 if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
@@ -68,7 +62,6 @@ if ($method === 'POST') {
     exit();
 }
 
-// Handle PUT request (Update an existing author)
 if ($method === 'PUT') {
     $data = json_decode(file_get_contents("php://input"));
 
@@ -88,7 +81,6 @@ if ($method === 'PUT') {
     exit();
 }
 
-// Handle DELETE requests (Delete an author)
 if ($method === 'DELETE') {
     $_DELETE = json_decode(file_get_contents("php://input"), true);
 

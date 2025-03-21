@@ -1,28 +1,29 @@
 <?php
-// Include headers
-require_once '../../config/headers.php';
-
+include_once '../../config/headers.php';
 include_once '../../config/Database.php';
 include_once '../../models/Category.php';
 
-// Instantiate DB & connect
 $database = new Database();
 $db = $database->connect();
 
-// Instantiate blog category object
 $category = new Category($db);
 
-// Get ID
-$category->id = isset($_GET['id']) ? $_GET['id'] : die();
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+  echo json_encode(["message" => "category_id Not Found"]);
+  exit();
+}
 
-// Get post
+$category->id = (int) $_GET['id'];
+
 $category->read_single();
 
-// Create array
-$category_arr = array(
-  'id' => $category->id,
-  'category' => $category->category
-);
+if (isset($category->id) && isset($category->category)) {
+  echo json_encode([
+      "id" => $category->id,
+      "category" => $category->category
+  ]);
+} else {
+  echo json_encode(["message" => "category_id Not Found"]);
+}
 
-// Make JSON
-print_r(json_encode($category_arr));
+exit();
