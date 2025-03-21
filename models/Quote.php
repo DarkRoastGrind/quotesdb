@@ -39,71 +39,23 @@ class Quote
 
     public function read_single()
     {
-        // Create query
-        $query = 'SELECT
-                        id,
-                        quote,
-                        author_id,
-                        category_id
-                      FROM
-                        ' . $this->table . '
-                      WHERE id = ?
-                      LIMIT 1';
-
-        // Prepare statement
+        $query = 'SELECT id, quote, author_id, category_id FROM ' . $this->table . ' WHERE id = :id LIMIT 1';
+        
         $stmt = $this->conn->prepare($query);
-
-        // Bind ID
-        $stmt->bindParam(1, $this->id);
-
-        // Execute query
-        if ($stmt->execute())
-        {
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($row)
-            {
-                // Set properties
-                $this->id = $row['id'];
-                $this->quote = $row['quote'];
-                $this->author_id = $row['author_id'];
-                $this->category_id = $row['category_id'];
-            }
-            else
-            {
-                // No quote found
-                echo json_encode(["message" => "No Quotes Found"]);
-                exit();
-            }
-        }
-        else
-        {
-            // Query execution failed
-            echo json_encode(["message" => "Error executing query"]);
-            exit();
-        }
+        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Return data or false if not found
     }
 
     public function read()
     {
-        // Create query
-        $query = 'SELECT 
-                        id,
-                        quote,
-                        author_id,
-                        category_id
-                    FROM 
-                    ' . $this->table . '
-                    ORDER BY
-                        id';
-
-        // Prepare statement
+        $query = 'SELECT id, quote, author_id, category_id FROM ' . $this->table . ' ORDER BY id';
+    
         $stmt = $this->conn->prepare($query);
-
-        // Execute query
         $stmt->execute();
-
-        return $stmt;
+    
+        return $stmt; // Return PDOStatement
     }
 
     public function update()

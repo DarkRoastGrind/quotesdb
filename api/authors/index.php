@@ -74,6 +74,7 @@ if ($method === 'POST')
     {
         echo json_encode(["message" => "Unable to create author"]);
     }
+
     exit();
 }
 

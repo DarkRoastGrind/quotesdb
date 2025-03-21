@@ -23,7 +23,6 @@ if (isset($author->id) && isset($author->author))
     "author" => $author->author
   ]);
 }
-
 else
 {
   echo json_encode(["message" => "author_id Not Found"]);

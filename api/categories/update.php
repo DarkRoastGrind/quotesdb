@@ -24,7 +24,6 @@ if ($category->update())
         "category" => $category->category
     ]);
 }
-
 else
 {
     echo json_encode(["message" => "Unable to update category"]);

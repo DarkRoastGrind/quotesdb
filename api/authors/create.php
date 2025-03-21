@@ -20,7 +20,6 @@ if ($author->create())
 {
     echo json_encode(["message" => "Author Created"]);
 }
-
 else
 {
     echo json_encode(["message" => "Unable to create author"]);

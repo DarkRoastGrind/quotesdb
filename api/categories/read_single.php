@@ -23,7 +23,6 @@ if (isset($category->id) && isset($category->category))
     "category" => $category->category
   ]);
 }
-
 else
 {
   echo json_encode(["message" => "category_id Not Found"]);

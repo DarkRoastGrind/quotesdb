@@ -20,7 +20,6 @@ if ($category->create())
 {
     echo json_encode(["message" => "Category Created"]);
 }
-
 else
 {
     echo json_encode(["message" => "Unable to create category"]);

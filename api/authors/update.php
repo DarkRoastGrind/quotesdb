@@ -24,7 +24,6 @@ if ($author->update())
         "author" => $author->author
     ]);
 }
-
 else
 {
     echo json_encode(["message" => "Unable to update author"]);
