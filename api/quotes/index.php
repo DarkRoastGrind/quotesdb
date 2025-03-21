@@ -17,20 +17,28 @@ if ($method === 'OPTIONS')
 
 if ($method === 'GET') {
     if (isset($_GET['id'])) {
+        // Set the quote ID from the query string
         $quote->id = $_GET['id'];
-        $result = $quote->read_single();
+        $stmt = $quote->read_single();
 
-        if ($quote->id && $quote->quote) {
+        // Check if any rows are returned
+        if ($stmt->rowCount() > 0) {
+            // Fetch the single quote data
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Return the quote as JSON
             echo json_encode([
-                'id' => $quote->id,
-                'quote' => $quote->quote,
-                'author' => $quote->author_id,
-                'category' => $quote->category_id
+                'id' => $row['id'],
+                'quote' => $row['quote'],
+                'author' => $row['author_id'],
+                'category' => $row['category_id']
             ]);
         } else {
+            // No quote found, return the error message
             echo json_encode(['message' => 'No Quotes Found']);
         }
     } else {
+        // Handle case where no specific quote ID is provided
         $result = $quote->read();
         $num = $result->rowCount();
 
@@ -53,11 +61,12 @@ if ($method === 'GET') {
     exit();
 }
 
+
 if ($method === 'POST')
 {
     $data = json_decode(file_get_contents("php://input"));
 
-    if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id) || 
+    if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id) ||
         empty(trim($data->quote)) || empty($data->author_id) || empty($data->category_id))
     {
         echo json_encode(["message" => "Missing Required Parameters"]);
@@ -95,7 +104,6 @@ if ($method === 'POST')
     {
         echo json_encode(['id' => $quote->id, 'quote' => $quote->quote, 'author_id' => $quote->author_id, 'category_id' => $quote->category_id]);
     }
-
     else
     {
         echo json_encode(["message" => "Unable to create quote"]);
@@ -150,7 +158,6 @@ if ($method === 'DELETE')
     {
         echo json_encode(['id' => $quote->id]);
     }
-
     else
     {
         echo json_encode(['id' => $quote->id, 'message' => 'Quote Not Deleted']);

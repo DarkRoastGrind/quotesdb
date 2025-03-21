@@ -19,11 +19,11 @@ class Quote
         $query = 'INSERT INTO ' . $this->table . ' (quote, author_id, category_id) 
                       VALUES (:quote, :author_id, :category_id)';
         $stmt = $this->conn->prepare($query);
-        
+
         $stmt->bindParam(':quote', $this->quote, PDO::PARAM_STR);
         $stmt->bindParam(':author_id', $this->author_id, PDO::PARAM_INT);
         $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
-        
+
         return $stmt->execute();
     }
 
@@ -31,9 +31,9 @@ class Quote
     {
         $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
         $stmt = $this->conn->prepare($query);
-        
+
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-        
+
         return $stmt->execute();
     }
 
@@ -49,19 +49,19 @@ class Quote
                         ' . $this->table . '
                     WHERE id = ?
                     LIMIT 1';
-    
+
         // Prepare statement
         $stmt = $this->conn->prepare($query);
-    
+
         // Bind ID
         $stmt->bindParam(1, $this->id);
-    
+
         // Execute query
         $stmt->execute();
-    
+
         return $stmt; // Return the result to be handled in the index.php
     }
-    
+
 
     public function read()
     {
@@ -75,16 +75,16 @@ class Quote
                     ' . $this->table . '
                     ORDER BY
                         id';
-    
+
         // Prepare statement
         $stmt = $this->conn->prepare($query);
-    
+
         // Execute query
         $stmt->execute();
-    
+
         return $stmt;
     }
-    
+
 
     public function update()
     {
