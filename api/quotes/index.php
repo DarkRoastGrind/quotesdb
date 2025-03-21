@@ -61,7 +61,6 @@ if ($method === 'GET') {
     exit();
 }
 
-
 if ($method === 'POST')
 {
     $data = json_decode(file_get_contents("php://input"));
@@ -115,21 +114,69 @@ if ($method === 'PUT')
 {
     $data = json_decode(file_get_contents("php://input"));
 
+    // Check if required parameters are missing
     if (empty($data->id) || empty($data->quote) || empty($data->author_id) || empty($data->category_id))
     {
         echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
+    // Set the properties of the quote object
     $quote->id = (int) $data->id;
     $quote->quote = trim($data->quote);
     $quote->author_id = (int) $data->author_id;
     $quote->category_id = (int) $data->category_id;
 
-    $quote->update();
+    // Check if the author_id exists in the authors table
+    $authorCheck = $db->prepare("SELECT id FROM authors WHERE id = :author_id");
+    $authorCheck->bindParam(':author_id', $quote->author_id);
+    $authorCheck->execute();
 
+    if ($authorCheck->rowCount() == 0)
+    {
+        echo json_encode(["message" => "author_id Not Found"]);
+        exit();
+    }
+
+    // Check if the category_id exists in the categories table
+    $categoryCheck = $db->prepare("SELECT id FROM categories WHERE id = :category_id");
+    $categoryCheck->bindParam(':category_id', $quote->category_id);
+    $categoryCheck->execute();
+
+    if ($categoryCheck->rowCount() == 0)
+    {
+        echo json_encode(["message" => "category_id Not Found"]);
+        exit();
+    }
+
+    // Check if the quote exists in the quotes table
+    $quoteCheck = $db->prepare("SELECT id FROM quotes WHERE id = :id");
+    $quoteCheck->bindParam(':id', $quote->id);
+    $quoteCheck->execute();
+
+    if ($quoteCheck->rowCount() == 0)
+    {
+        echo json_encode(["message" => "No Quotes Found"]);
+        exit();
+    }
+
+    // Attempt to update the quote
+    if ($quote->update())
+    {
+        echo json_encode([
+            'id' => $quote->id,
+            'quote' => $quote->quote,
+            'author_id' => $quote->author_id,
+            'category_id' => $quote->category_id
+        ]);
+    }
+    else
+    {
+        echo json_encode(['message' => 'Quote Not Updated']);
+    }
     exit();
 }
+
 
 if ($method === 'DELETE')
 {
