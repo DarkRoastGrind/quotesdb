@@ -5,16 +5,16 @@ include_once '../../models/Author.php';
 
 $database = new Database();
 $db = $database->connect();
-
 $author = new Author($db);
-
 $result = $author->read();
 $num = $result->rowCount();
 
-if ($num > 0) {
+if ($num > 0)
+{
   $authors_arr = [];
 
-  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+  while ($row = $result->fetch(PDO::FETCH_ASSOC))
+  {
     $authors_arr[] = [
       'id' => $row['id'],
       'author' => $row['author']
@@ -22,7 +22,10 @@ if ($num > 0) {
   }
 
   echo json_encode($authors_arr);
-} else {
+}
+
+else
+{
   echo json_encode(["message" => "No Author Found"]);
 }
 

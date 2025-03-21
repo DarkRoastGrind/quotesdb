@@ -5,21 +5,24 @@ include_once '../../models/Author.php';
 
 $database = new Database();
 $db = $database->connect();
-
 $author = new Author($db);
-
 $data = json_decode(file_get_contents("php://input"));
 
-if (!isset($data->author) || empty(trim($data->author))) {
+if (!isset($data->author) || empty(trim($data->author)))
+{
     echo json_encode(["message" => "Missing required fields"]);
     exit();
 }
 
 $author->author = trim($data->author);
 
-if ($author->create()) {
+if ($author->create())
+{
     echo json_encode(["message" => "Author Created"]);
-} else {
+}
+
+else
+{
     echo json_encode(["message" => "Unable to create author"]);
 }
 

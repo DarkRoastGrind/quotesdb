@@ -5,16 +5,16 @@ include_once '../../models/Category.php';
 
 $database = new Database();
 $db = $database->connect();
-
 $category = new Category($db);
-
 $result = $category->read();
 $num = $result->rowCount();
 
-if ($num > 0) {
+if ($num > 0)
+{
   $cat_arr = [];
 
-  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+  while ($row = $result->fetch(PDO::FETCH_ASSOC))
+  {
     $cat_arr[] = [
       'id' => $row['id'],
       'category' => $row['category']
@@ -22,7 +22,10 @@ if ($num > 0) {
   }
 
   echo json_encode($cat_arr);
-} else {
+}
+
+else
+{
   echo json_encode(["message" => "No category Found"]);
 }
 
