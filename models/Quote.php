@@ -26,38 +26,15 @@ class Quote
         
         return $stmt->execute();
     }
-    
 
     public function delete()
     {
-        // Check if the quote exists
-        $quoteQuery = 'SELECT id FROM ' . $this->table . ' WHERE id = :id';
-        $quoteStmt = $this->conn->prepare($quoteQuery);
-        $quoteStmt->bindParam(':id', $this->id);
-        $quoteStmt->execute();
-
-        if ($quoteStmt->rowCount() == 0)
-        {
-            // Quote does not exist
-            echo json_encode(['message' => 'No Quotes Found']);
-            exit();  // Ensures that the response is sent back
-        }
-
-        // Proceed with deletion
         $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
         $stmt = $this->conn->prepare($query);
-        $this->id = htmlspecialchars(strip_tags($this->id));
+        
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-
-        // Execute delete query
-        if ($stmt->execute())
-        {
-            return true; // Return true if deletion is successful
-        }
-        else
-        {
-            return false; // Return false if deletion fails
-        }
+        
+        return $stmt->execute();
     }
 
     public function read_single()

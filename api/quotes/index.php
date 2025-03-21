@@ -111,7 +111,7 @@ if ($method === 'POST')
     {
         echo json_encode(['id' => $quote->id, 'quote' => $quote->quote, 'author_id' => $quote->author_id, 'category_id' => $quote->category_id]);
     }
-    
+
     else
     {
         echo json_encode(["message" => "Unable to create quote"]);
@@ -151,17 +151,28 @@ if ($method === 'DELETE')
 
     $quote->id = (int) $_DELETE['id'];
 
+    // Check if the quote exists before attempting to delete
+    $quoteCheck = $db->prepare("SELECT id FROM quotes WHERE id = :id");
+    $quoteCheck->bindParam(':id', $quote->id);
+    $quoteCheck->execute();
+
+    if ($quoteCheck->rowCount() == 0)
+    {
+        echo json_encode(["id" => null, "message" => "No Quotes Found"]);
+        exit();
+    }
+
     if ($quote->delete())
     {
         echo json_encode(['id' => $quote->id]);
-        exit();
     }
     
     else
     {
         echo json_encode(['id' => $quote->id, 'message' => 'Quote Not Deleted']);
-        exit();
     }
+
+    exit();
 }
 
 
