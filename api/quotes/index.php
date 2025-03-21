@@ -73,33 +73,49 @@ if ($method === 'POST')
 {
     $data = json_decode(file_get_contents("php://input"));
 
-    if (empty($data->quote) || empty($data->author_id) || empty($data->category_id))
+    if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id) || 
+        empty(trim($data->quote)) || empty($data->author_id) || empty($data->category_id))
     {
-        echo json_encode([
-            "message" => "Missing Required Parameters"
-        ]);
+        echo json_encode(["message" => "Missing Required Parameters"]);
         exit();
     }
 
-    $quote->quote = $data->quote;
-    $quote->author_id = $data->author_id;
-    $quote->category_id = $data->category_id;
+    $quote->quote = htmlspecialchars(strip_tags(trim($data->quote)));
+    $quote->author_id = (int) $data->author_id;
+    $quote->category_id = (int) $data->category_id;
+
+
+    // Check if author_id exists
+    $authorCheck = $db->prepare("SELECT id FROM authors WHERE id = :author_id");
+    $authorCheck->bindParam(':author_id', $quote->author_id);
+    $authorCheck->execute();
+
+    if ($authorCheck->rowCount() == 0)
+    {
+        echo json_encode(["message" => "author_id Not Found"]);
+        exit();
+    }
+
+    // Check if category_id exists
+    $categoryCheck = $db->prepare("SELECT id FROM categories WHERE id = :category_id");
+    $categoryCheck->bindParam(':category_id', $quote->category_id);
+    $categoryCheck->execute();
+
+    if ($categoryCheck->rowCount() == 0)
+    {
+        echo json_encode(["message" => "category_id Not Found"]);
+        exit();
+    }
 
     if ($quote->create())
     {
-        echo json_encode([
-            'id' => $quote->id,
-            'quote' => $quote->quote,
-            'author_id' => $quote->author_id,
-            'category_id' => $quote->category_id
-        ]);
+        echo json_encode(['id' => $quote->id, 'quote' => $quote->quote, 'author_id' => $quote->author_id, 'category_id' => $quote->category_id]);
     }
-
+    
     else
     {
         echo json_encode(["message" => "Unable to create quote"]);
     }
-
     exit();
 }
 
