@@ -1,8 +1,6 @@
 <?php
-// Include headers
+// Include headers and models
 require_once '../../config/headers.php';
-
-// Include necessary files.
 include_once '../../config/Database.php';
 include_once '../../models/Author.php';
 
@@ -10,7 +8,7 @@ include_once '../../models/Author.php';
 $database = new Database();
 $db = $database->connect();
 
-// Instantiate blog post object
+// Instantiate Author object
 $author = new Author($db);
 
 // Get raw posted data
@@ -32,5 +30,3 @@ if ($author->create()) {
 }
 
 exit();
-
-

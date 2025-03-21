@@ -1,8 +1,18 @@
 <?php
-// Include headers and models
 include_once '../../config/headers.php';
 include_once '../../config/Database.php';
 include_once '../../models/Author.php';
+
+$database = new Database();
+$db = $database->connect();
+
+$author = new Author($db);
+function sendResponse($data, $status = 200)
+{
+    http_response_code($status);
+    echo json_encode($data);
+    exit();
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -13,13 +23,6 @@ if ($method === 'OPTIONS') {
     exit();
 }
 
-// Instantiate DB & connect
-$database = new Database();
-$db = $database->connect();
-
-// Instantiate Author model
-$author = new Author($db);
-
 // Handle GET request (Fetch authors)
 if ($method === 'GET') {
     if (isset($_GET['id'])) {
@@ -28,9 +31,9 @@ if ($method === 'GET') {
 
         if ($result->rowCount() > 0) {
             $row = $result->fetch(PDO::FETCH_ASSOC);
-            echo json_encode(['id' => $row['id'], 'author' => $row['author']]);
+            sendResponse(['id' => $row['id'], 'author' => $row['author']]);
         } else {
-            echo json_encode(['message' => 'author_id Not Found']);
+            sendResponse(['message' => 'author_id Not Found'], 404);
         }
     } else {
         $result = $author->read();
@@ -41,12 +44,11 @@ if ($method === 'GET') {
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $authors_arr[] = ['id' => $row['id'], 'author' => $row['author']];
             }
-            echo json_encode($authors_arr);
+            sendResponse($authors_arr);
         } else {
-            echo json_encode(['message' => 'No authors Found']);
+            sendResponse(['message' => 'No authors Found'], 404);
         }
     }
-    exit();
 }
 
 // Handle POST request (Create a new author)
@@ -54,18 +56,16 @@ if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!isset($data->author) || empty(trim($data->author))) {
-        echo json_encode(["message" => "Missing Required Parameters"]);
-        exit();
+        sendResponse(["message" => "Missing Required Parameters"], 400);
     }
 
     $author->author = trim($data->author);
 
     if ($author->create()) {
-        echo json_encode(['id' => $author->id, 'author' => $author->author]);
+        sendResponse(['id' => $author->id, 'author' => $author->author]);
     } else {
-        echo json_encode(["message" => "Unable to create author"]);
+        sendResponse(["message" => "Unable to create author"], 500);
     }
-    exit();
 }
 
 // Handle PUT request (Update an existing author)
@@ -73,44 +73,33 @@ if ($method === 'PUT') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!isset($data->id) || !isset($data->author) || empty(trim($data->author))) {
-        echo json_encode(["message" => "Missing Required Parameters"]);
-        exit();
+        sendResponse(["message" => "Missing Required Parameters"], 400);
     }
 
     $author->id = (int) $data->id;
     $author->author = trim($data->author);
 
     if ($author->update()) {
-        echo json_encode(["id" => $author->id, "author" => $author->author]);
+        sendResponse(["id" => $author->id, "author" => $author->author]);
     } else {
-        echo json_encode(["message" => "Unable to update author"]);
+        sendResponse(["message" => "Unable to update author"], 500);
     }
-    exit();
 }
 
 // Handle DELETE requests (Delete an author)
 if ($method === 'DELETE') {
-    // Get raw DELETE data
     $_DELETE = json_decode(file_get_contents("php://input"), true);
 
-    // Check if id is provided
     if (!isset($_DELETE['id']) || empty($_DELETE['id'])) {
-        echo json_encode(["id" => null, "message" => "No authors Found"]);
-        exit();
+        sendResponse(["id" => null, "message" => "No authors Found"], 404);
     }
 
-    // Set the id in the Author object
     $author->id = (int) $_DELETE['id'];
 
-    // Attempt to delete the author using the delete method from the model
     if ($author->delete()) {
-        // Return the id field on success
-        echo json_encode(['id' => $author->id]);
-        exit();
+        sendResponse(['id' => $author->id]);
     } else {
-        // Include the 'id' field even in case of failure
-        echo json_encode(['id' => $author->id, 'message' => 'Author Not Deleted']);
-        exit();
+        sendResponse(['id' => $author->id, 'message' => 'Author Not Deleted'], 500);
     }
 }
 
