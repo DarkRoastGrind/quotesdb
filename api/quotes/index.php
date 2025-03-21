@@ -15,34 +15,54 @@ if ($method === 'OPTIONS')
     exit();
 }
 
-if ($method === 'GET') 
+if ($method === 'GET')
 {
-    if (isset($_GET['id'])) 
+    if (isset($_GET['id']))
     {
-        $quote->id = (int) $_GET['id'];
-        $quoteData = $quote->read_single();
+        $quote->id = $_GET['id'];
+        $quote->read_single();
 
-        if ($quoteData) 
+        if ($quote->id && $quote->quote)
         {
-            echo json_encode($quoteData);
-        } 
-        else 
-        {
-            echo json_encode(["message" => "No Quotes Found"]);
+            echo json_encode([
+                'id' => $quote->id,
+                'quote' => $quote->quote,
+                'author' => $quote->author_id,
+                'category' => $quote->category_id
+            ]);
         }
-    } 
-    else 
+
+        else
+        {
+            echo json_encode(['message' => 'No Quotes Found']);
+        }
+
+    }
+
+    else
     {
         $result = $quote->read();
-        $quotes_arr = $result->fetchAll(PDO::FETCH_ASSOC);
+        $num = $result->rowCount();
 
-        if (!empty($quotes_arr)) 
+        if ($num > 0)
         {
+            $quotes_arr = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC))
+            {
+                extract($row);
+                $quotes_arr[] = [
+                    'id' => $id,
+                    'quote' => $quote,
+                    'author' => $author_id,
+                    'category' => $category_id
+                ];
+            }
             echo json_encode($quotes_arr);
-        } 
-        else 
+        }
+
+        else
         {
-            echo json_encode(["message" => "No Quotes Found"]);
+            echo json_encode(['message' => 'No Quotes Found']);
         }
     }
 
