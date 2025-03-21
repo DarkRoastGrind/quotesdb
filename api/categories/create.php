@@ -1,42 +1,34 @@
 <?php
-  // Headers
-  header('Access-Control-Allow-Origin: *');
-  header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: POST');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
+// Include headers
+include_once '../../config/headers.php';
 
-  include_once '../../config/Database.php';
-  include_once '../../models/Category.php';
-  
-  // Instantiate DB & connect
-  $database = new Database();
-  $db = $database->connect();
+include_once '../../config/Database.php';
+include_once '../../models/Category.php';
 
-  // Instantiate blog post object
-  $category = new Category($db);
+// Instantiate DB & connect
+$database = new Database();
+$db = $database->connect();
 
-  // Get raw posted data
-  $data = json_decode(file_get_contents("php://input"));
+// Instantiate blog post object
+$category = new Category($db);
 
-  if (!isset($data->category)|| empty(trim($data->category)))
-  {
-      echo json_encode(["message" => "Missing required fields"]);
-      exit();
-  }
+// Get raw posted data
+$data = json_decode(file_get_contents("php://input"));
 
-  $category->category = trim($data->category);
-  
-  // Create category
-  if ($category->create()) 
-  {
-      echo json_encode(["message" => "Category Created"]);
-  } 
+if (!isset($data->category) || empty(trim($data->category))) {
+    echo json_encode(["message" => "Missing required fields"]);
+    exit();
+}
 
-  else 
-  {
-      echo json_encode(["message" => "Unable to create category"]);
-  }
-  
-  exit();
+$category->category = trim($data->category);
+
+// Create category
+if ($category->create()) {
+    echo json_encode(["message" => "Category Created"]);
+} else {
+    echo json_encode(["message" => "Unable to create category"]);
+}
+
+exit();
 
 

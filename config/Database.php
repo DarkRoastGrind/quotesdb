@@ -19,26 +19,18 @@ class Database
         $this->host = getenv('HOST');
         $this->port = getenv('PORT');
     }
- 
+
     public function connect()
     {
-        if ($this->conn)
-        {
+        if ($this->conn) {
             return $this->conn;
-        }
-
-        else
-        {
+        } else {
             $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->dbname};";
-            try
-            {
+            try {
                 $this->conn = new PDO($dsn, $this->username, $this->password);
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 return $this->conn;
-            }
-
-            catch (PDOException $e)
-            {
+            } catch (PDOException $e) {
                 echo 'Connection error: ' . $e->getMessage();
             }
         }

@@ -1,6 +1,6 @@
 <?php
-    // Include headers
-    require_once '../../config/headers.php';
+// Include headers
+require_once '../../config/headers.php';
 
 // Include necessary files
 include_once '../../config/Database.php';
@@ -33,11 +33,10 @@ $stmt = $db->prepare($quoteExistsQuery);
 $stmt->bindParam(':id', $quote->id);
 $stmt->execute();
 
-if ($stmt->rowCount() == 0) 
-{
-  // Quote does not exist, but return an 'id' field
-  echo json_encode(["id" => $quote->id, "message" => "No Quotes Found"]);
-  exit();
+if ($stmt->rowCount() == 0) {
+    // Quote does not exist, but return an 'id' field
+    echo json_encode(["id" => $quote->id, "message" => "No Quotes Found"]);
+    exit();
 }
 
 // Attempt to delete the quote

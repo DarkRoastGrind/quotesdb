@@ -1,29 +1,25 @@
 <?php
-  // Headers
-  header('Access-Control-Allow-Origin: *');
-  header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: POST');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
+// Include headers
+require_once '../../config/headers.php';
 
-  include_once '../../config/Database.php';
-  include_once '../../models/Quote.php'; 
-    
-  // Instantiate DB & connect
-  $database = new Database();
-  $db = $database->connect();
+include_once '../../config/Database.php';
+include_once '../../models/Quote.php';
 
-  // Instantiate blog post object
-  $quote = new Quote($db);
+// Instantiate DB & connect
+$database = new Database();
+$db = $database->connect();
 
-  // Get raw posted data
-  $data = json_decode(file_get_contents("php://input"));
+// Instantiate blog post object
+$quote = new Quote($db);
 
-  if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) 
-  {
-      echo json_encode(["message" => "Missing required fields"]);
-      exit();
-  }
+// Get raw posted data
+$data = json_decode(file_get_contents("php://input"));
 
-    // Create quote
-    $quote->create();
+if (!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
+  echo json_encode(["message" => "Missing required fields"]);
+  exit();
+}
+
+// Create quote
+$quote->create();
 

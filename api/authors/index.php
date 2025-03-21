@@ -90,28 +90,20 @@ if ($method === 'PUT') {
 
 // Handle DELETE requests (Delete an author)
 if ($method === 'DELETE') {
-    // Get raw DELETE data
     $_DELETE = json_decode(file_get_contents("php://input"), true);
 
-    // Check if id is provided
     if (!isset($_DELETE['id']) || empty($_DELETE['id'])) {
         echo json_encode(["id" => null, "message" => "No authors Found"]);
         exit();
     }
 
-    // Set the id in the Author object
     $author->id = (int) $_DELETE['id'];
 
-    // Attempt to delete the author using the delete method from the model
     if ($author->delete()) {
-        // Return the id field on success
         echo json_encode(['id' => $author->id]);
-        exit();
     } else {
-        // Include the 'id' field even in case of failure
         echo json_encode(['id' => $author->id, 'message' => 'Author Not Deleted']);
-        exit();
     }
+    exit();
 }
-
 ?>
