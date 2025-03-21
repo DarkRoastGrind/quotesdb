@@ -31,7 +31,6 @@ if ($num > 0)
   echo json_encode($auth_arr);
 
 }
-
 else
 {
   echo json_encode(array('message' => 'No quote Found'));

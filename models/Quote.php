@@ -62,7 +62,6 @@ class Quote
         return $stmt; // Return the result to be handled in the index.php
     }
 
-
     public function read()
     {
         // Create query
@@ -85,7 +84,6 @@ class Quote
         return $stmt;
     }
 
-
     public function update()
     {
         // Create Query
@@ -94,24 +92,24 @@ class Quote
                           author_id = :author_id,
                           category_id = :category_id
                       WHERE id = :id';
-    
+
         // Prepare Statement
         $stmt = $this->conn->prepare($query);
-    
+
         // Clean data
         $this->quote = htmlspecialchars(strip_tags($this->quote));
         $this->id = (int) htmlspecialchars(strip_tags($this->id));
         $this->author_id = (int) htmlspecialchars(strip_tags($this->author_id));
         $this->category_id = (int) htmlspecialchars(strip_tags($this->category_id));
-    
+
         // Bind data
         $stmt->bindParam(':quote', $this->quote);
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':author_id', $this->author_id);
         $stmt->bindParam(':category_id', $this->category_id);
-    
+
         // Execute query
         return $stmt->execute(); // Return true or false based on execution success
     }
-    
+
 }

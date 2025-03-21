@@ -31,7 +31,6 @@ if ($quote->delete())
     echo json_encode(['id' => $quote->id]);
     exit();
 }
-
 else
 {
     echo json_encode(['id' => $quote->id, 'message' => 'Quote Not Deleted']);

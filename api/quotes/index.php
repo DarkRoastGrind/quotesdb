@@ -15,14 +15,17 @@ if ($method === 'OPTIONS')
     exit();
 }
 
-if ($method === 'GET') {
-    if (isset($_GET['id'])) {
+if ($method === 'GET')
+{
+    if (isset($_GET['id']))
+    {
         // Set the quote ID from the query string
         $quote->id = $_GET['id'];
         $stmt = $quote->read_single();
 
         // Check if any rows are returned
-        if ($stmt->rowCount() > 0) {
+        if ($stmt->rowCount() > 0)
+        {
             // Fetch the single quote data
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -33,18 +36,24 @@ if ($method === 'GET') {
                 'author' => $row['author_id'],
                 'category' => $row['category_id']
             ]);
-        } else {
+        }
+        else
+        {
             // No quote found, return the error message
             echo json_encode(['message' => 'No Quotes Found']);
         }
-    } else {
+    }
+    else
+    {
         // Handle case where no specific quote ID is provided
         $result = $quote->read();
         $num = $result->rowCount();
 
-        if ($num > 0) {
+        if ($num > 0)
+        {
             $quotes_arr = [];
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC))
+            {
                 extract($row);
                 $quotes_arr[] = [
                     'id' => $id,
@@ -54,7 +63,9 @@ if ($method === 'GET') {
                 ];
             }
             echo json_encode($quotes_arr);
-        } else {
+        }
+        else
+        {
             echo json_encode(['message' => 'No Quotes Found']);
         }
     }
@@ -176,7 +187,6 @@ if ($method === 'PUT')
     }
     exit();
 }
-
 
 if ($method === 'DELETE')
 {
