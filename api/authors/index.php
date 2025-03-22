@@ -1,12 +1,7 @@
 <?php
-include_once '../../config/headers.php';
-include_once '../../config/Database.php';
-include_once '../../models/Author.php';
+include_once '../init.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-$database = new Database();
-$db = $database->connect();
-$author = new Author($db);
 
 if ($method === 'OPTIONS')
 {
@@ -14,6 +9,7 @@ if ($method === 'OPTIONS')
     header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
     exit();
 }
+
 
 if ($method === 'GET')
 {
