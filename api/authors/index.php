@@ -1,5 +1,7 @@
 <?php
-include_once '../../authors/init.php';
+include_once '../../config/headers.php';
+include_once '../../config/Database.php';
+include_once '../../models/Author.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -10,6 +12,9 @@ if ($method === 'OPTIONS')
     exit();
 }
 
+$database = new Database();
+$db = $database->connect();
+$author = new Author($db);
 
 if ($method === 'GET')
 {
