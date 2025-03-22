@@ -1,5 +1,5 @@
 <?php
-include_once '../init.php';
+include_once '../../authors/init.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 

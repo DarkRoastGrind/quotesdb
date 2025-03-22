@@ -1,6 +1,5 @@
 <?php
-include_once '../init.php';
-
+include_once '../../authors/init.php';
 
 if (!isset($_GET['id']) || empty($_GET['id']))
 {

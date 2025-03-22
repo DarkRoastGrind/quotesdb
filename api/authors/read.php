@@ -1,5 +1,5 @@
 <?php
-include_once '../init.php';
+include_once '../../authors/init.php';
 
 $result = $author->read();
 $num = $result->rowCount();

@@ -1,5 +1,5 @@
 <?php
-include_once '../init.php';
+include_once '../../authors/init.php';
 
 $data = json_decode(file_get_contents("php://input"));
 
