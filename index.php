@@ -14,6 +14,16 @@ if ($method === 'OPTIONS') {
     exit();
 }
 
+declare(strict_types = 1);
+
+echo '<pre>';
+print_r(getenv('SITE_URL'));
+echo '<br>';
+print_r($_SERVER);
+echo '</pre>';
+
+phpinfo();
+
 // Remove query string (if any) from the request URI
 $request_uri = strtok($request_uri, '?');
 
