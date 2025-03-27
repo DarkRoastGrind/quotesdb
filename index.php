@@ -1,6 +1,5 @@
 <?php
 declare(strict_types = 1);
-echo "index.php is being executed<br>";
 // Enable CORS and set Content-Type
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -22,6 +21,7 @@ $request_uri = strtok($request_uri, '?');
 // Parse the request URI to determine the endpoint
 $segments = explode('/', trim($request_uri, '/')); // Split URI into segments
 
+echo "index.php is being executed<br>";
 // Extract the first segment as the resource type (e.g., 'authors', 'quotes', 'categories')
 if (!isset($segments[1]) || $segments[1] === '') {
     header('Content-Type: text/html');
