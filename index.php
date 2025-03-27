@@ -31,7 +31,13 @@ $request_uri = strtok($request_uri, '?');
 $segments = explode('/', trim($request_uri, '/')); // Split URI into segments
 
 // Extract the first segment as the resource type (e.g., 'authors', 'quotes', 'categories')
-$resource = isset($segments[1]) ? $segments[1] : '';
+if (!isset($segments[1]) || $segments[1] === '') {
+    header('Content-Type: text/html');
+    readfile(__DIR__ . '/index.html');
+    exit();
+}
+
+$resource = $segments[1];
 
 // Define base paths for resources
 $base_path = __DIR__ . '/api';
