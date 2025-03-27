@@ -31,20 +31,3 @@ header('Content-Type: application/json');
 
 // Define base paths for resources
 $base_path = __DIR__ . '/api';
-
-// Route the request based on the resource (authors, quotes, categories)
-switch ($resource) {
-    case 'authors':
-        require_once $base_path . '/authors/index.php';
-        break;
-    case 'quotes':
-        require_once $base_path . '/quotes/index.php';
-        break;
-    case 'categories':
-        require_once $base_path . '/categories/index.php';
-        break;
-    default:
-        // If the resource is not found, return a 404 error
-        echo json_encode(["message" => "Resource not found"]);
-        break;
-}
