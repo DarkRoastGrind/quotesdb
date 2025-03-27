@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+echo "index.php is being executed<br>";
 // Enable CORS and set Content-Type
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
