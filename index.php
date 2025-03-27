@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 // Enable CORS and set Content-Type
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -13,8 +14,6 @@ if ($method === 'OPTIONS') {
     header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
     exit();
 }
-
-declare(strict_types = 1);
 
 echo '<pre>';
 print_r(getenv('SITE_URL'));
