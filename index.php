@@ -24,7 +24,7 @@ $segments = explode('/', trim($request_uri, '/')); // Split URI into segments
 // Extract the first segment as the resource type (e.g., 'authors', 'quotes', 'categories')
 if (!isset($segments[1]) || $segments[1] === '') {
     header('Content-Type: text/html');
-    echo file_get_contents(__DIR__ . '/index.html');
+    readfile(__DIR__ . '/index.html');
     exit();
 }
 
