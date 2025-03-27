@@ -1,6 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
+declare(strict_types = 1);
 // Get the HTTP request method and request URI
 $method = $_SERVER['REQUEST_METHOD'];
 $request_uri = $_SERVER['REQUEST_URI'];
@@ -26,6 +25,9 @@ if (!isset($segments[1]) || $segments[1] === '') {
 }
 
 $resource = $segments[1];
+
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
 
 // Define base paths for resources
 $base_path = __DIR__ . '/api';
